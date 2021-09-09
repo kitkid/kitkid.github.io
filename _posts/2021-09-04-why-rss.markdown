@@ -1,0 +1,17 @@
+---
+layout: post
+title:  "Why RSS icon!"
+date:   2021-09-04 11:59:36 +0800
+tags: play
+---
+不能理解
+删掉了和rss一切相关的东西 怎么底下这个icon还在啊- -
+:
+
+{% highlight ruby %}
+<a class="social-link social-rss" href="{{ "/feed.xml" | relative_url  }}" target="_blank">
+  <i class="icon-rss"></i>
+</a>
+{% endhighlight %}
+
+救命了🆘
