@@ -31,7 +31,7 @@ twitch_username: kitcatbrk
 gitalk:
   id: 81ee733f89ed2e070bff
   secret: 4e826dd7ebcaf5861623a309b2e6e6c766be704c
-  repo: https://kitkid.github.io/
+  repo: kitkid.github.io
 
 # Build settings
 
