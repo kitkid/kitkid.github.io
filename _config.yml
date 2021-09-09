@@ -29,8 +29,8 @@ github_username:  kitkid
 instagram_username: kiittyyhhh
 twitch_username: kitcatbrk
 gitalk:
-  id: 81ee733f89ed2e070bff
-  secret: c766ea8a01f08d3c220ee59a5d7053f710aba408
+  id: 7ad288c7bf640f9a66fe
+  secret: 99a3ef2fc2b2e458543ae91b77e808d94da25c84
   repo: kitkid.github.io
 
 # Build settings
