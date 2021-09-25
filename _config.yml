@@ -32,7 +32,7 @@ gitalk:
   id: 7ad288c7bf640f9a66fe
   secret: 99a3ef2fc2b2e458543ae91b77e808d94da25c84
   repo: kitkid.github.io
-
+google_analytics_4: G-9JR07VRDG8
 # Build settings
 
 plugins:
