@@ -38,6 +38,6 @@ navbar_title: tags
 
   {% assign keys = tags %}
   {% assign field = 'tags' %}
-  {%- include views/segments.html -%}
+  {%- include functions/segments.html -%}
 
 {%- endif -%}
