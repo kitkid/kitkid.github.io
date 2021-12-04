@@ -46,7 +46,7 @@ lang: zh-Hans
 
 ![screenshot](/assets/images/posts/211114/o2.jpeg)<font size=2>又想要做菜- -我恨tx加速器
 
-《毛线小精灵》中的两团毛线，默认设定也是蓝色和红色。
+《毛线小精灵2》中的两团毛线，默认设定也是蓝色和红色。
 
 ![screenshot](/assets/images/posts/211114/u2.jpeg)
 
