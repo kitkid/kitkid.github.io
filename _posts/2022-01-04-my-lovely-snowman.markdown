@@ -72,7 +72,7 @@ lang: zh-Hans
 
 完美雪人最高
 
-![screenshot](/assets/images/posts/220104/5-1.png)<font size=2>笑到头掉，太兴奋了吧（请忽略背景随地乱放的物品）
+![screenshot](/assets/images/posts/220104/5-1.png)<font size=2>笑到头掉，感叹号滥用，太兴奋了吧（请忽略背景随地乱放的物品）
 
 不错的黄金比例
 
