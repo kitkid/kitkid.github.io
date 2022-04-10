@@ -139,6 +139,23 @@ article {
   margin-bottom: $post-footer-spacing;
 }
 
+#scroll-to-top {
+  opacity: 0;
+  position: fixed;
+  bottom: 60px;
+  right: 20%;
+
+  :last-child {
+    transition: transform 0.7s ease-in-out;
+
+    &:active, &:hover {
+       transform: translateY(-10%);
+    }
+  }
+  transform: translateY(30%);
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
 .site-nav {
   display: flex;
   flex-flow: row wrap;
