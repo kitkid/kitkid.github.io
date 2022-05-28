@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Notion二战"
+title:  "Notion/date二战"
 tags: play
 lang: zh-Hans
 ---
