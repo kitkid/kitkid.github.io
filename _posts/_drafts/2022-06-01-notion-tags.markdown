@@ -74,12 +74,55 @@ lang: zh-Hans
 
 结果：当观影记录里出现两个以上的标签时，导入时也会被记成一个。
 
-然后我回忆了豆坟导入的数据样式，是：`a,b,c`
+然后我回忆了豆坟csv导入的数据样式，是：`a,b,c`，一拍脑袋：
+
+{% highlight ruby %}
+  let tags = contents.filter(el => el.textContent.startsWith('标签'));
+  if (tags.length) {
+  -  tags = tags[0].textContent.replace(/^标签: /, '').trim();
+  +  tags = tags[0].textContent.replace(/^标签: /, '').trim().replace(/ /, ',').;
+    console.log(tags);
+  }
+{% endhighlight %}
 
 报错：
 > TypeError: (value || []).map is not a function
 
+显然哪里不对。
 
+开始翻阅Notion 文档，找到：
+![screenshot](/assets/images/posts/220530/03.png)
+
+是数组：`"a","b","c"`
+
+**阶段三，undefined-ones-need-to-be-defined**
+怎么改呢？抄板书：
+
+{% highlight ruby %}
+  let tags = contents.filter(el => el.textContent.startsWith('标签'));
+  let tags_options = [];
+  if (tags.length) {
+    tags = tags[0].textContent.replace(/^标签: /, '').trim();
+    tags_options = tags.split(' ');
+    console.log(tags_options);
+  }
+{% endhighlight %}
+
+以及：
+{% highlight ruby %}
+  const result = {
+    id,
+    link: item.link,
+    rating: typeof rating === 'number' ? rating : null,
+    comment: typeof comment === 'string' ? comment : null, // 备注：XXX -> 短评
+    tags: tags_options.length > 0 ? tags_options : null, // 标签：XXX -> 标签
+    time: item.isoDate, // '2021-05-30T06:49:34.000Z'
+  };
+{% endhighlight %}
+
+- 首先**定义**子数组
+- 将拆出来的标签字符本体按' '拆分成子数组
+- 然后正常
 
 感谢徐老师！
 
@@ -87,10 +130,28 @@ lang: zh-Hans
 ### 课后练习
 
 虽然不同类型，但就强行算是练习题吧：自动导入制片国家。
-首先，
+首先，这个信息来自电影的豆瓣页面"movie item page"
+![screenshot](/assets/images/posts/220530/04.png)
 
+找同类，决定和imdbInfo差不多的处理方式：
+
+首先，sync-rss：
+
+{% highlight ruby %}
+  const countryInfo = [...dom.window.document.querySelectorAll('#info span.pl')].filter(i => i.textContent.startsWith('制片国家/地区:'));
+  if (countryInfo.length) {
+    itemData[DB_PROPERTIES.COUNTRYINFO] = countryInfo[0].nextSibling.textContent.trim();
+    }
+{% endhighlight %}
+
+接着，util：
+
+加上列名和类型：是简单的rich_text
+
+就行了。
 
 ![screenshot](/assets/images/posts/220530/01.png)
+
 Notion作战结束！
 
 ...
