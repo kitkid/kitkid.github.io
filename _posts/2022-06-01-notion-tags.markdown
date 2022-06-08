@@ -40,6 +40,7 @@ lang: zh-Hans
 
 ### 过程
 **阶段一，util-is-utility**
+
 坑A：在sync-rss里做改动后，没有在util增加标签目的地的相应字段。
 
 标点遗忘星人大危机：空格和逗号！
@@ -49,6 +50,7 @@ lang: zh-Hans
 在[util.js]()加上列的名称： `TAGS: '标签',`，以及该列数据的属性：`TAGS: 'multi_select',`
 
 **阶段二，valuetype-is-valuable**
+
 坑B：关于multi-select的数据类型其实是数组。
 
 情况：首先原作对multi-select做了分类，那是不是直接在rating后面加上tags的条件就好了？
@@ -69,7 +71,7 @@ lang: zh-Hans
     break;
 {% endhighlight %}
 
-![screenshot](/assets/images/posts/220530/02.png)
+![screenshot](/assets/images/posts/220601/02.png)
 {:.side-note}
 
 结果：当观影记录里出现两个以上的标签时，导入时也会被记成一个。
@@ -90,12 +92,13 @@ lang: zh-Hans
 
 显然哪里不对。
 
-开始翻阅Notion 文档，找到：
-![screenshot](/assets/images/posts/220530/03.png)
+开始翻阅Notion文档[^1]，找到：
+![screenshot](/assets/images/posts/220601/03.png)
 
 是数组：`"a","b","c"`
 
 **阶段三，undefined-ones-need-to-be-defined**
+
 怎么改呢？抄板书：
 
 {% highlight ruby %}
@@ -131,7 +134,7 @@ lang: zh-Hans
 
 虽然不同类型，但就强行算是练习题吧：自动导入制片国家。
 首先，这个信息来自电影的豆瓣页面"movie item page"
-![screenshot](/assets/images/posts/220530/04.png)
+![screenshot](/assets/images/posts/220601/04.png)
 
 找同类，决定和imdbInfo差不多的处理方式：
 
@@ -150,15 +153,15 @@ lang: zh-Hans
 
 就行了。
 
-![screenshot](/assets/images/posts/220530/01.png)
+![screenshot](/assets/images/posts/220601/01.png)
 
 Notion作战结束！
 
 ...
 
 游戏随记仍然咕咕的鸽子h
-
+><font size=2>一直没上传- -迟到的儿童节快乐
 
 注释：
 
-[^1]:
+[^1]:[Notion文档](https://developers.notion.com/reference/property-object#multi-select-configuration)
