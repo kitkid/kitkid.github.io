@@ -122,5 +122,5 @@ lang: zh-Hans
 
 附注：
 
-[^1]:[网友的评论](https://ngabbs.com/read.php?tid=31675069)
-[^2]:[研究员论文](https://ngabbs.com/read.php?pid=606615851&opt=128)
+[^1]:[网友的评论](https://ngabbs.com/read.php?pid=606615851&opt=128)
+[^2]:[研究员论文](https://ngabbs.com/read.php?tid=31675069)
