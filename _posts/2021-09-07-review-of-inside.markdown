@@ -48,7 +48,7 @@ Remind you the film Manchester by the Sea?
 <br>一个可爱迷你小男孩变成难以形容的肉球 最后吧唧 呼啦啦啦摔下山坡
 
 
-![screenshot](/assets/images/posts/2109071.jpeg)<font size=2> credit: @Domnicate /steam com </font>
+![screenshot](/assets/images/posts/210907/1.jpeg)<font size=2> credit: @Domnicate /steam com </font>
 
 
 冲击感 这种感受的强烈与否也许每个人都不同 很主观
@@ -94,7 +94,7 @@ Remind you the film Manchester by the Sea?
 <br>镜头拉近推出的效果设计辅助了剧情发展以及想突出的故事细节
 
 
-![screenshot](/assets/images/posts/2109072.jpeg)<font size=2>另个角度 这个游戏算是ugc故事会
+![screenshot](/assets/images/posts/210907/2.jpeg)<font size=2>另个角度 这个游戏算是ugc（脑补）故事会
 
 ...
 

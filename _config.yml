@@ -29,16 +29,40 @@ github_username:  kitkid
 instagram_username: kiittyyhhh
 twitch_username: kitcatbrk
 gitalk:
-  id: 81ee733f89ed2e070bff
-  secret: 4e826dd7ebcaf5861623a309b2e6e6c766be704c
-  repo: https://kitkid.github.io/
-
+  id: 7ad288c7bf640f9a66fe
+  secret: 99a3ef2fc2b2e458543ae91b77e808d94da25c84
+  repo: kitkid.github.io
+google_analytics_4: G-9JR07VRDG8
 # Build settings
+markdown: kramdown
 
 plugins:
   - jekyll-feed
   - jekyll-pdf-embed
   - jekyll-seo-tag
+  - jekyll-toc
+
+head_scripts:
+  - /assets/js/scroll-to-top.js
+
+#cdn:
+#   See https://www.srihash.org for info on how to generate the hashes
+#  css:              "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+#  css_hash:         "sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+#  js:               "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+#  js_hash:          "sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+#  js_bundle:        "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"
+#  js_bundle_hash:   "sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm"
+#  jquery:           "https://code.jquery.com/jquery-3.4.1.slim.min.js"
+#  jquery_hash:      "sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+#  popper:           "https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+#  popper_hash:      "sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+
+
+toc:
+  min_level:        2
+  max_level:        4
+
 
 # Exclude from processing.
 # The following items will not be processed, by default.

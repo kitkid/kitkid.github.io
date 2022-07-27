@@ -7,5 +7,5 @@ tags: play
 final log for today
 最后在目录最外强行覆盖了icon_twitch的代码
 新问题是
-![screenshot](/assets/images/posts/210904screenshot.png)
+![screenshot](/assets/images/posts/210904/1.png)
 为什么twitch icon不平衡 飞起来了？？
