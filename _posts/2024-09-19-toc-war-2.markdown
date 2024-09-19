@@ -1,0 +1,88 @@
+---
+layout: post
+title:  "TOC二战"
+tags: play
+lang: zh-Hans
+toc: true
+---
+><font size=2>cha老师真的蛮好用的 我说4o版本
+果然死线才是生产力之本
+
+终于时隔两年的二战。（起先还是先谷歌搜了搜，3分钟后转头cha老师- -）[^1]
+
+## 第一轮：直接成功bushi
+cha老师给的步骤很明确。
+
+1.引入插件：多年前已完成
+
+不过，一开始我自己写的和cha老师给的有出入，追问后发现cha老师一开始给的是旧版本的写法。nah
+
+2.修改布局文件：这一步是在_post的布局里加入有TOC的情况。
+
+  然后是之前尝试但没能成功的了。
+
+3. 自定义TOC样式
+4. 滚动同步
+5. 页面使用TOC
+
+一番复制粘贴后
+
+![screenshot](/assets/images/posts/240919/01.png)
+><font size=2>一轮效果
+
+竟然就成功大半。能看了！
+就是样式有些难评。改！
+
+## 第二轮：主修样式
+
+先是位置。
+
+啊我现在知道当时为什么一直在底部了。应该是css样式问题。
+{% highlight ruby %}
+  .toc {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  }
+{% endhighlight %}
+通过调整top/bottom, right/left，就可以调整toc作为sidebar相对于页面的位置
+
+![screenshot](/assets/images/posts/240919/02.png)
+><font size=2>2.1轮效果
+
+然后是内容样式。
+- 蓝色看上去像是超链接。不是很和谐
+- 想要能看出不同级别的标题关系
+- 想要区分悬浮选中状态
+
+于是修改了
+- 字色
+- 间距和锁进
+- 增加了悬浮状态下的样式：选中后会加粗、放大、变黑(还有过渡效果，嘿嘿)
+
+![screenshot](/assets/images/posts/240919/04.png)
+><font size=2>2.2轮效果，最丑
+
+这个间距和缩进真是匪夷所思啊。cha老师陷入沉思。
+
+## 第三轮：还得是..
+冷静了一下，决定~~试试~~删掉了cha老师的奇怪代码。
+
+![screenshot](/assets/images/posts/240919/05.png)
+><font size=2>三轮效果，另增加了一点字号，还算清楚吧
+
+还没测试移动端的样子，为啥本地调试手机不能测！
+{:.side-note}
+
+下划线感觉是默认框架的问题，再议。
+
+
+就这样先！
+
+...
+
+鸽子h
+
+注释：
+
+[^1]:[和cha老师的热聊](https://chatgpt.com/share/66ec216d-8294-800a-8e89-58cd320aba1a)
