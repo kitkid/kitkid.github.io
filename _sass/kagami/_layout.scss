@@ -94,7 +94,6 @@ article {
   font-size: 16px;
   }
 
-
   .toc ul li a {
     text-decoration: none;
     color: inherit;
@@ -106,6 +105,7 @@ article {
     font-weight: bold;
     color: #000000;
   }
+
 
   .aside, .sidenote, .side-note {
     width: 160px;
@@ -129,7 +129,7 @@ article {
     h2, h3, h4, h5, h6 {
       &::before { color: rgba(0,0,0,0); }
     }
-    .aside, .sidenote, .side-note {
+    .aside, .sidenote, .toc, .side-note {
       display: none;
     }
   }
