@@ -62,6 +62,7 @@ head_scripts:
 toc:
   min_level:        2
   max_level:        4
+  no_toc_section_class: "no_toc"  # 不包含在 TOC 中的部分
 
 
 # Exclude from processing.
