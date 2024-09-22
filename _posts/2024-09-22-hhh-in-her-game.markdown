@@ -43,7 +43,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
 某种程度上来说，探索着并接触到了制作游戏的多个视角。
 
-接下来，记录三个实例。
+接下来，记录四个实例。
 
 
 #### 1 系统向：模块设计
@@ -59,7 +59,45 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
 设计本身，是工作第一大块：从发起系统模块，设立系统运作的规则，搭建交互原型，到持续修改、迭代模块功能，提升游戏体验。
 
-实例一：关于一个模块内功能的设计历程
+实例零：【图鉴】系统的诞生
+
+  **背景**
+  - 游戏可收集内容丰富
+  - 【图鉴】可引导驱动玩家收集
+
+  **任务**
+  - 确定系统内的基础功能
+
+  **行动**
+  - 参考游戏：以同类（Warframe）为主、主流二次元手游（原神、深空之眼）
+  - 结合项目特点，设计界面原型
+
+  **结果**
+  
+  例1：主菜单
+
+  同：
+  - 各分类单独入口
+  - 首页展示收集进度
+
+  异：
+  - 增加段位的展示
+
+![Sample0-1](/assets/images/posts/240922/Sample0-1.png)
+
+  例2：装备列表
+
+  同：
+  - 搜索功能
+  - 筛选功能
+
+  异：
+  - 详情页层级较Warframe减少一层
+
+![Sample0-2](/assets/images/posts/240922/Sample0-2.png)  
+
+
+实例一：【图鉴】关于未收集物品的详情展示
 
   **背景**
   - 设想的体验是让玩家全收集：装备、模组[^2]等
@@ -91,12 +129,10 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   - “我”需要模组信息来对比
 
   决定尝试改造：
-  - 模组图鉴增加更多信息，包括加成属性数值、获取方式
-  - 为便于交互，增加掉落地点的跳转
+  - 【图鉴】未收集的执行卡也展示全部信息，以便查阅
+  - 增加掉落地点的跳转
 
   [![Sample1-1](/assets/images/posts/240922/Sample1-1.png)](/assets/images/posts/240922/Sample1-1.png){: target="_blank" }
-
-  [![Sample1-2](/assets/images/posts/240922/Sample1-2.png)](/assets/images/posts/240922/Sample1-2.png){: target="_blank" }
 
   ><font size=2>原型示意图
 
