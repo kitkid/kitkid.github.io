@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "TOC二战"
+title:  "New Feature - TOC"
 tags: play
 lang: zh-Hans
 toc: true
 ---
-><font size=2>cha老师真的蛮好用的 我说4o版本
+><font size=2>又名，“TOC二战”；cha老师真的蛮好用的 我说4o版本
 果然死线才是生产力之本
 
 终于时隔两年的二战。（起先还是先谷歌搜了搜，3分钟后转头cha老师- -）[^1]
