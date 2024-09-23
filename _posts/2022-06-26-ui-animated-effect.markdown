@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "动感地带效果"
-tags: game UX
+tags: game ux
 lang: zh-Hans
 ---
 
