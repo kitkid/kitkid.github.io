@@ -13,14 +13,15 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
 关键词
 
-`探索`
+`好奇心`
 `敏感`
 `美`
 
 ## 工作
 首先，关于工作项目的简单介绍：
-- 游戏类型：TPS+刷宝
-- 平台：移动、PC
+- 游戏类型：3D、TPS
+- 游玩平台：移动、PC
+- 开发引擎：Unity
 - 开发状态：在研，23年12月获得版号；持续小范围内测中，预计2024年末公测。[^1]
 
 #### 1 系统向：模块设计
@@ -41,8 +42,10 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   - 结合项目特点，设计界面原型
 
   **结果**
-  
+
   例1：主菜单
+
+![Sample0-1](/assets/images/posts/240922/Sample0-1.png)
 
   同：
   - 各分类单独入口
@@ -51,9 +54,9 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   异：
   - 增加段位的展示
 
-![Sample0-1](/assets/images/posts/240922/Sample0-1.png)
-
   例2：装备列表
+
+![Sample0-2](/assets/images/posts/240922/Sample0-2.png)  
 
   同：
   - 搜索功能
@@ -61,9 +64,6 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
   异：
   - 详情页层级较Warframe减少一层
-
-![Sample0-2](/assets/images/posts/240922/Sample0-2.png)  
-
 
 
 更多小例：
@@ -82,38 +82,32 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 实例二：交互设计
 
   **背景**
-  - 玩家间的交易系统【市场】使用反馈差：多数差评
+  - 玩家间的交易系统【市场】反馈难用，需要优化更迭
 
   **任务**
   - 如何变好用
 
   **行动**
 
-  解析问题：怎么个难用
-  - 分不清列表里是买还是卖
-  - 难以理解【订单匹配】规则，想买买不了
-  - 总之买卖很复杂
+  进一步解析交互问题：
+  - 玩家不理解哪里买、哪里卖
+  - 商品列表因为下拉菜单叠加、滑动难
+  - 商品列表页信息不直观，都在二级详情页
 
-  分析：
-  - 修改底层设计，原先的设计是买卖等同；实际体验上有差异，需要区分
-  - 【订单匹配】框架无法变动，尝试加入更多规则增加自动化步骤，减少玩家需要理解和操作的步骤
-
-  决定改造：
-  - 拆分买卖
-  - 增加默认价格、即时匹配等规则
-
-  [![Sample2-1](/assets/images/posts/240922/Sample2-1.png)](/assets/images/posts/240922/Sample12-1.png){: target="_blank" }
-  [![Sample2-2](/assets/images/posts/240922/Sample2-2.png)](/assets/images/posts/240922/Sample2-2.png){: target="_blank" }
-  改前版本，买卖入口均在商品列表[^3]
-
-
-  [![Sample2-3](/assets/images/posts/240922/Sample2-3.png)](/assets/images/posts/240922/Sample2-3.png){: target="_blank" }
-  [![Sample2-4](/assets/images/posts/240922/Sample2-4.png)](/assets/images/posts/240922/Sample2-4.png){: target="_blank" }
-  改后，买卖入口拆分[^4]
+  决定针对性改造。
 
   **结果**
-  - 功能模块变清晰
-  - 变好用了一点
+
+  改造[^3]：
+
+  [![Sample2-1](/assets/images/posts/240922/Sample2-1.png){:.image-hover}](/assets/images/posts/240922/Sample12-1.png){: target="_blank" }
+
+  1. 整理首页标签栏，明确【买方】入口，归纳常用标签页
+  2. 调整界面布局，将常用的【搜索】居中
+  3. 加入单独的【筛选】功能，取消列表内的下拉菜单，避免滑动区域重叠
+  4. 商品列表内加入订单数量信息
+  5. 明确【卖方】入口
+
 
 更多例子：
 
@@ -128,7 +122,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
 #### 3 剧情向：演出
 
-> 剧情方面，负责剧情系统的功能设计、开发实现、实际配置及优化：利用电影专业知识，参与演出分镜设计，用Inky和Timeline编辑器配置演出资源，产出流畅体验
+> 剧情方面，负责剧情系统的功能设计、开发实现、实际配置及优化：利用电影专业知识，参与演出分镜设计，利用Inky和Timeline编辑器配置演出资源，利用Wwise调试音效音乐，产出流畅体验
 
 实例三：剧情镜头
 
@@ -137,6 +131,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   - 新手关里有个解谜装置，玩家卡住概率很大
 
   **行动**
+
   解析问题：
   - 卡住的原因有找不到、不会解
   - 关卡引导线、介绍都有，但是还是有人找不到也不会解
@@ -145,10 +140,19 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   - 剧情增加演出形式：配合对话文本，用镜头引导
 
   **结果**
+  - 提出功能需求，和程序实现通过Inky指令调用Timeline资源、呈现实时渲染的演出功能
+
+  - 为解谜任务设计镜头特写，通过Timeline加入控制Virtual Camera的动画，最后在Inky配置演出段落出现的时机
+
   - 能发现了（
+
 {% include videoplayer.html id=page.driveId1 %}
 
-另个例子：利用ChatGPT产出运镜功能原型，耗时半个工作日。
+另个例子：
+
+利用ChatGPT产出运镜功能原型，耗时半个工作日
+- 借助AI提供的C#脚本，多次调试后，基本满足需求
+- 为了更好的展示预期效果和给程序提供一些实现思路
 
 {% include videoplayer.html id=page.driveId2 %}
 
@@ -184,7 +188,9 @@ hhh（it's my initials)
 [^1]:[不清楚能说项目名称吗？会被当成广告吗。](https://www.bilibili.com/video/BV1Er42187P8/?share_source=copy_web&vd_source=08129e78b458c450e14d6cf2c55ea84e)
 
 [^3]:改造前
+<!---
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/EY6UlzJWOJ4lQDxIuluCFY/Market?node-id=0-1&embed-host=share" allowfullscreen></iframe>
+--->
 
 [^4]:改造后
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/EY6UlzJWOJ4lQDxIuluCFY/Market?node-id=2177-2214&embed-host=share" allowfullscreen></iframe>

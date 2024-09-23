@@ -73,7 +73,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   - 结合项目特点，设计界面原型
 
   **结果**
-  
+
   例1：主菜单
 
   同：
@@ -161,7 +161,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 实例二：交互设计
 
   **背景**
-  - 玩家间的交易系统【市场】使用反馈差：多数差评
+  - 玩家间的交易系统【市场】使用反馈难用
 
   **任务**
   - 如何变好用
@@ -176,19 +176,24 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   分析：
   - 修改底层设计，原先的设计是买卖等同；实际体验上有差异，需要区分
   - 【订单匹配】框架无法变动，尝试加入更多规则增加自动化步骤，减少玩家需要理解和操作的步骤
+  - 商品列表因为下拉菜单叠加、滑动难
+  - 商品列表页信息不直观，都在二级详情页
 
   决定改造：
   - 拆分买卖
   - 增加默认价格、即时匹配等规则
+  - 调整筛选功能位置
+  - 增加信息
 
   [![Sample2-1](/assets/images/posts/240922/Sample2-1.png)](/assets/images/posts/240922/Sample12-1.png){: target="_blank" }
-  [![Sample2-2](/assets/images/posts/240922/Sample2-2.png)](/assets/images/posts/240922/Sample2-2.png){: target="_blank" }
-  改前版本，买卖入口均在商品列表[^3]
+  1. 整理首页标签栏，明确【买方】入口，归纳常用标签页
+  2. 调整界面布局，将常用的【搜索】居中
+  3. 加入单独的【筛选】功能，取消列表内的下拉菜单，避免滑动区域重叠
+  4. 商品列表内加入订单数量信息
+  5. 明确【卖方】入口
 
-
-  [![Sample2-3](/assets/images/posts/240922/Sample2-3.png)](/assets/images/posts/240922/Sample2-3.png){: target="_blank" }
   [![Sample2-4](/assets/images/posts/240922/Sample2-4.png)](/assets/images/posts/240922/Sample2-4.png){: target="_blank" }
-  改后，买卖入口拆分[^4]
+  改后，【卖方】入口进入仓库界面，也保持了界面统一[^4]
 
   **结果**
   - 功能模块变清晰
