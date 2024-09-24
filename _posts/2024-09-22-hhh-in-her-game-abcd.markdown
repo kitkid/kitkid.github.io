@@ -206,11 +206,11 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
 更多例子：
 
-- 调整信息传达
+- 调整布局，强调升级的仪式和成就感
 
   [![Sample4](/assets/images/posts/240922/Sample4.png){:.image-hover}](/assets/images/posts/240922/Sample4.png){: target="_blank" }
 
-- 调整UI设计
+- 调整UI元素，更美观精致；弱化UI存在，沉浸体验
 
   [![Sample5](/assets/images/posts/240922/Sample5.png){:.image-hover}](/assets/images/posts/240922/Sample5.png){: target="_blank" }
 

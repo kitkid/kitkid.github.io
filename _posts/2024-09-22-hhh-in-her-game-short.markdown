@@ -120,11 +120,11 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
 更多例子：
 
-- 调整信息传达
+- 调整布局，强调升级的仪式和成就感
 
   [![Sample4](/assets/images/posts/240922/Sample4.png){:.image-hover}](/assets/images/posts/240922/Sample4.png){: target="_blank" }
 
-- 调整UI设计
+- 调整元素，更美观精致；弱化UI存在，沉浸体验
 
   [![Sample5](/assets/images/posts/240922/Sample5.png){:.image-hover}](/assets/images/posts/240922/Sample5.png){: target="_blank" }
 
@@ -183,7 +183,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 关于猛兽派对：
 - 时长：PC 30小时+；
 - 最爱地图：团体踢球、赛车；
-- 上线频率最高：夏日通行证阶段，肝到30级左右，最后氪满级。
+- 上线频率最高：夏日通行证阶段，肝到30级左右。
 
 
 ## 小结
