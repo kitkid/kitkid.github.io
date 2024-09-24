@@ -96,6 +96,9 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
 ![Sample0-2](/assets/images/posts/240922/Sample0-2.png)  
 
+  体验反馈：
+  - 段位展示建立长期目标，鼓励收集和探索
+  - 界面层级减少，更便利，操作时间减少
 
 实例一：【图鉴】关于未收集物品的详情展示
 
@@ -137,7 +140,8 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   ><font size=2>原型示意图
 
   **结果**
-  - 嘛，变好用了。
+  - 玩家迷失的概率变小，找到目标的概率增大
+  - 跳转功能使操作更便利
 
 更多小例：
 
@@ -174,17 +178,17 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   - 总之买卖很复杂
 
   分析：
-  - 修改底层设计，原先的设计是买卖等同；实际体验上有差异，需要区分
-  - 【订单匹配】框架无法变动，尝试加入更多规则增加自动化步骤，减少玩家需要理解和操作的步骤
+  - 入口不清晰、没拆分，所以玩家不理解哪里买、哪里卖
   - 商品列表因为下拉菜单叠加、滑动难
   - 商品列表页信息不直观，都在二级详情页
 
   决定改造：
   - 拆分买卖
-  - 增加默认价格、即时匹配等规则
   - 调整筛选功能位置
   - 增加信息
+  - 增加更多自动化规则，减少玩家操作
 
+  **结果**
   [![Sample2-1](/assets/images/posts/240922/Sample2-1.png)](/assets/images/posts/240922/Sample12-1.png){: target="_blank" }
   1. 整理首页标签栏，明确【买方】入口，归纳常用标签页
   2. 调整界面布局，将常用的【搜索】居中
@@ -195,9 +199,10 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   [![Sample2-4](/assets/images/posts/240922/Sample2-4.png)](/assets/images/posts/240922/Sample2-4.png){: target="_blank" }
   改后，【卖方】入口进入仓库界面，也保持了界面统一[^4]
 
-  **结果**
+  体验反馈：
   - 功能模块变清晰
-  - 变好用了一点
+  - 玩家负面反馈减少
+  - 【交易】使用度提升
 
 更多例子：
 
@@ -219,10 +224,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
 工作第三部分是剧情演出向：包括整个剧情系统的功能设计、配置台词/演出资源、参与演出/漫画分镜设计、配置音乐音效、以及后续功能优化等。
 
-这段有些想隐藏🤔
-{:.sidenote}
 虽然定位是射击刷宝游戏——“没人看剧情”，但是演出体验做到能吸引到玩家并让其沉浸，也是一种惊喜吧。演出，大成本堆砌的特效动画肯定能吸睛，但更多时候小细节的打断能影响整段演出的传达：一段简单镜头移动，可能存在动画速率的问题导致玩家体验不舒服；演出片段中，一个音效错位导致出戏；在出入关卡、播放演出片段、打开界面时，是否需要打断音乐？等等。
-
 
 实例三：剧情镜头
 
@@ -239,10 +241,22 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   - 剧情增加演出形式：配合对话文本，用镜头引导
 
   **结果**
-  - 能发现了（
+
+  - 提出功能需求，和程序实现通过Inky指令调用Timeline资源、呈现实时渲染的演出功能
+
+  - 为解谜任务设计镜头特写，通过Timeline加入控制Virtual Camera的动画，最后在Inky配置演出段落出现的时机
+
 {% include videoplayer.html id=page.driveId1 %}
 
-另个例子：利用ChatGPT产出运镜功能原型，耗时半个工作日。
+  体验反馈：
+  - 玩家更多注意到装置
+  - 剧情表现更丰富
+
+另个例子：
+
+利用ChatGPT产出运镜功能原型，耗时半个工作日
+- 借助AI提供的C#脚本，多次调试后，基本满足需求
+- 为了更好的展示预期效果和给程序提供一些实现思路
 
 {% include videoplayer.html id=page.driveId2 %}
 
@@ -277,8 +291,6 @@ hhh（it's my initials)
 
 [^1]:[不清楚能说项目名称吗？会被当成广告吗。](https://www.bilibili.com/video/BV1Er42187P8/?share_source=copy_web&vd_source=08129e78b458c450e14d6cf2c55ea84e)
 [^2]:模组，Mod，定义为赋予装备各种效果的加成卡片。可参考[Warframe/Mod](https://warframe.fandom.com/wiki/Mod)；[Warframe/模组](https://warframe.huijiwiki.com/wiki/MOD_2.0)
-[^3]:改造前
-<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/EY6UlzJWOJ4lQDxIuluCFY/Market?node-id=0-1&embed-host=share" allowfullscreen></iframe>
 
 [^4]:改造后
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/EY6UlzJWOJ4lQDxIuluCFY/Market?node-id=2177-2214&embed-host=share" allowfullscreen></iframe>

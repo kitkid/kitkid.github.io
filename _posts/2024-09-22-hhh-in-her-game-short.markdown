@@ -52,7 +52,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   - 首页展示收集进度
 
   异：
-  - 增加段位的展示
+  - 增加玩家等级的展示
 
   例2：装备列表
 
@@ -64,6 +64,10 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
   异：
   - 详情页层级较Warframe减少一层
+
+  体验反馈：
+  - 段位展示建立长期目标，鼓励收集和探索
+  - 界面层级减少，更便利，操作时间减少
 
 
 更多小例：
@@ -90,15 +94,15 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   **行动**
 
   进一步解析交互问题：
-  - 玩家不理解哪里买、哪里卖
+  - 入口不清晰、没拆分，所以玩家不理解哪里买、哪里卖
   - 商品列表因为下拉菜单叠加、滑动难
   - 商品列表页信息不直观，都在二级详情页
 
-  决定针对性改造。
+  决定针对性地改进了交互界面
 
   **结果**
 
-  改造[^3]：
+  改造结果[^4]：
 
   [![Sample2-1](/assets/images/posts/240922/Sample2-1.png){:.image-hover}](/assets/images/posts/240922/Sample12-1.png){: target="_blank" }
 
@@ -107,6 +111,11 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   3. 加入单独的【筛选】功能，取消列表内的下拉菜单，避免滑动区域重叠
   4. 商品列表内加入订单数量信息
   5. 明确【卖方】入口
+
+  体验反馈：
+  - 功能模块更加直观和易用
+  - 玩家负面反馈减少
+  - 【交易】使用度提升
 
 
 更多例子：
@@ -144,9 +153,11 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
   - 为解谜任务设计镜头特写，通过Timeline加入控制Virtual Camera的动画，最后在Inky配置演出段落出现的时机
 
-  - 能发现了（
-
 {% include videoplayer.html id=page.driveId1 %}
+
+  体验反馈：
+  - 玩家更多注意到装置
+  - 剧情表现更丰富
 
 另个例子：
 
@@ -187,10 +198,6 @@ hhh（it's my initials)
 
 [^1]:[不清楚能说项目名称吗？会被当成广告吗。](https://www.bilibili.com/video/BV1Er42187P8/?share_source=copy_web&vd_source=08129e78b458c450e14d6cf2c55ea84e)
 
-[^3]:改造前
-<!---
-<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/EY6UlzJWOJ4lQDxIuluCFY/Market?node-id=0-1&embed-host=share" allowfullscreen></iframe>
---->
 
 [^4]:改造后
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/EY6UlzJWOJ4lQDxIuluCFY/Market?node-id=2177-2214&embed-host=share" allowfullscreen></iframe>
