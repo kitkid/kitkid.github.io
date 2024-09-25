@@ -74,6 +74,8 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
   **结果**
 
+[![Sample0-0](/assets/images/posts/240922/Sample0-0.png){:.image-hover}](/assets/images/posts/240922/Sample0-0.png){: target="_blank" }
+
   例1：主菜单
 
   同：
@@ -189,7 +191,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
   - 增加更多自动化规则，减少玩家操作
 
   **结果**
-  [![Sample2-1](/assets/images/posts/240922/Sample2-1.png)](/assets/images/posts/240922/Sample12-1.png){: target="_blank" }
+  [![Sample2-1](/assets/images/posts/240922/Sample2-1.png)](/assets/images/posts/240922/Sample2-1.png){: target="_blank" }
   1. 整理首页标签栏，明确【买方】入口，归纳常用标签页
   2. 调整界面布局，将常用的【搜索】居中
   3. 加入单独的【筛选】功能，取消列表内的下拉菜单，避免滑动区域重叠

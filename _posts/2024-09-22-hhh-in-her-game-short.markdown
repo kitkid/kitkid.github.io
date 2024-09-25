@@ -43,6 +43,8 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
   **结果**
 
+[![Sample0-0](/assets/images/posts/240922/Sample0-0.png){:.image-hover}](/assets/images/posts/240922/Sample0-0.png){: target="_blank" }
+
   例1：主菜单
 
 ![Sample0-1](/assets/images/posts/240922/Sample0-1.png)
@@ -104,7 +106,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
   改造结果[^4]：
 
-  [![Sample2-1](/assets/images/posts/240922/Sample2-1.png){:.image-hover}](/assets/images/posts/240922/Sample12-1.png){: target="_blank" }
+  [![Sample2-1](/assets/images/posts/240922/Sample2-1.png){:.image-hover}](/assets/images/posts/240922/Sample2-1.png){: target="_blank" }
 
   1. 整理首页标签栏，明确【买方】入口，归纳常用标签页
   2. 调整界面布局，将常用的【搜索】居中
