@@ -5,6 +5,12 @@ lang: zh-Hans
 navbar: true
 position: 100
 ---
+新一轮找工作
+
+[简历请看](/assets/pdf/Huahui_CV.pdf)
+[过往工作实例请看](/assets/pdf/Huahui_2024.pdf)
+
+---
 
 - [Game](/tags/game)
 - [Film](/tags/film)

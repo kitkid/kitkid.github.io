@@ -11,6 +11,9 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
 ><font size=2>实例中的游戏截图均在项目已公开内容范围中
 
+[PDF版本请看](/assets/pdf/Huahui_2024.pdf)
+
+
 关键词
 
 `好奇心`
@@ -39,7 +42,7 @@ driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
 
   **行动**
   - 参考游戏：以同类（Warframe）为主、主流二次元手游（原神、深空之眼）
-  - 结合项目特点，设计界面原型
+  - 结合项目特点，设定系统结构、界面原型
 
   **结果**
 
