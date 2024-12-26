@@ -42,18 +42,22 @@ driveId2: 1ADfezrEcjrSYeaUaWxlepRs8ex6LxO5K/preview
     比例：以动画为主的开场，凸显华丽亮相和流畅（距离第一场战斗的时间，相对其他游戏略长）
 
 **作用之《塑造角色形象》**
-- 动画、台词配音
+- 途径一：动画、漫画
 
-例如：角色“比利”，设定上是个幼稚、搞笑、爱耍帅的机器人。
+    例如：角色“比利”，设定上是个幼稚、搞笑、爱耍帅的机器人。
 
-人设表现在，造型夸张，同时存在一些机械框架的感觉。
+    人设表现在，造型夸张，同时存在一些机械框架的感觉
 ![Sample1](/assets/images/posts/241226/Sample1.png)
 
 ![Sample3](/assets/images/posts/241226/Sample3.png)
 
-开场剧情有耍帅的桥段（然后耍帅落空后搞笑）
+- 途径二：台词配音
+    开场剧情有耍帅、耍帅落空后搞笑的桥段
 ![Sample2](/assets/images/posts/241226/Sample2.png)
 
+![Sample5](/assets/images/posts/241226/Sample5.png)
+
+    配音语调上起伏夸张，偶尔带口音，符合搞笑表演人格
 
 **作用之《连接》**
 - 运用相同相似元素进行一些转场连接，使得演出在不同形式之间或者不同游玩阶段之间都能流畅展开
@@ -64,7 +68,7 @@ driveId2: 1ADfezrEcjrSYeaUaWxlepRs8ex6LxO5K/preview
 例二：角色从天而降到入场动画
 [![Sample4](/assets/images/posts/241226/Sample4.png){:.image-hover}](/assets/images/posts/241226/Sample4.png){: target="_blank" }
 
-
+- 音乐在同一任务状态中即便场景不同也能连续不断点，这点也大大提升了观感体验的流畅
 
 ## 题目二
 >提交AVG演出方向的作品集
@@ -83,4 +87,5 @@ driveId2: 1ADfezrEcjrSYeaUaWxlepRs8ex6LxO5K/preview
 
 ---
 感谢观看
+
 生蛋h
