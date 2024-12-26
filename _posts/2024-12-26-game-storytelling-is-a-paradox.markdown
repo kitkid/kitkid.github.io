@@ -56,12 +56,12 @@ driveId2: 1ADfezrEcjrSYeaUaWxlepRs8ex6LxO5K/preview
 例如：角色“比利”，设定上是个幼稚、搞笑、爱耍帅的机器人。
 
 人设表现在，造型夸张，同时存在一些机械框架的感觉。
-[Sample1](/assets/images/posts/241226/Sample1.png)
+![Sample1](/assets/images/posts/241226/Sample1.png)
 
-[Sample3](/assets/images/posts/241226/Sample3.png)
+![Sample3](/assets/images/posts/241226/Sample3.png)
 
 开场剧情有耍帅的桥段（然后耍帅落空后搞笑）
-[Sample2](/assets/images/posts/241226/Sample2.png)
+![Sample2](/assets/images/posts/241226/Sample2.png)
 
 
 
