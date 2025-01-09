@@ -3,6 +3,7 @@ layout: post
 title:  "水边的红衣男孩"
 tags: game
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>因为某瓣显示一直在审核，于是把游戏杂记直接转移到这儿
 

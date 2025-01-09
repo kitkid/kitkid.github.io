@@ -3,6 +3,7 @@ layout: post
 title:  "新晋训练家后续一二"
 tags: game ux
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>感恩忠实读者大人
 

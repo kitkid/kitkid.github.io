@@ -3,6 +3,7 @@ layout: post
 title:  "蓝与红-砖头篇"
 tags: game film
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>上周看了蓝白红三部曲，突然特别想写颜色
 

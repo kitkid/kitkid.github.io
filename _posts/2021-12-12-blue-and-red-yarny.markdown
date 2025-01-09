@@ -3,6 +3,7 @@ layout: post
 title:  "蓝与红后续篇-毛线团"
 tags: game
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>最近又是鸵鸟状态，指电脑24小时打开勿扰模式。冬眠了，可以慢慢剥栗子了。
 

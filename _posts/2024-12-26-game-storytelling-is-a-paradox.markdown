@@ -6,6 +6,7 @@ lang: zh-Hans
 toc: true
 driveId1: 12UlxA--oFRFFuFT9juaUROxBQi9UnRRf/preview
 driveId2: 1ADfezrEcjrSYeaUaWxlepRs8ex6LxO5K/preview
+show_on_homepage: true
 ---
 ><font size=2>本篇为演出应聘特供
 

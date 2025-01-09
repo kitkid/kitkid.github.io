@@ -3,6 +3,7 @@ layout: post
 title:  "门外汉记游戏画幅-下"
 tags: game
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>其实下篇要短很多- -
 

@@ -3,6 +3,7 @@ layout: post
 title:  "影像中的又双叠加-一"
 tags: film
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>关于一篇写了两年多的笔记。
 

@@ -3,6 +3,7 @@ layout: post
 title:  "包里的UI"
 tags: game ux
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>不会吧不会吧，上次写随记是3月吗？微弱辩解每周都有在敲键盘- -
 

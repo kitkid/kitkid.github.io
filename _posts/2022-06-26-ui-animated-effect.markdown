@@ -3,6 +3,7 @@ layout: post
 title:  "动感地带效果"
 tags: game ux
 lang: zh-Hans
+show_on_homepage: true
 ---
 
 ><font size=2>开始无限跳链没什么写成的东西

@@ -3,6 +3,7 @@ layout: post
 title:  "和雪哥哥的后续"
 tags: game
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>标题莫名让我代入了一些纯爱剧情（。
 

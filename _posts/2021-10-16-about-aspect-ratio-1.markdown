@@ -3,6 +3,7 @@ layout: post
 title:  "门外汉记影像画幅-上"
 tags: film
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>昨天看了电影《兰心大剧院》。影院放映时，没有测试校正画幅大小，导致出现部分字幕被遮挡的问题（尽管，我一开始还以为是故意的，被海报上的书法迷惑），于是现在特别想写画幅（路人：？
 

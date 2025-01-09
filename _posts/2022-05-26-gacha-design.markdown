@@ -3,6 +3,7 @@ layout: post
 title:  "抽我吧"
 tags: game
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2> hentai
 

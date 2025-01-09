@@ -3,6 +3,7 @@ layout: post
 title:  "不抽不是..."
 tags: game
 lang: zh-Hans
+show_on_homepage: true
 ---
 
 接着写。

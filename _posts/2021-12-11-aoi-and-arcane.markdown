@@ -3,6 +3,7 @@ layout: post
 title:  "倒数第四周动画随记"
 tags: film
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>豆瓣备份。以及我恨疫情。再次。
 

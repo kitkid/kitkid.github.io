@@ -3,6 +3,7 @@ layout: post
 title:  "和雪哥哥的故事"
 tags: game
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>既然想要投递文案策划，是不是应该写些文案相关。
 

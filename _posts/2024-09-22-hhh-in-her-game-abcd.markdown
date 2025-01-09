@@ -6,6 +6,7 @@ lang: zh-Hans
 toc: true
 driveId1: 1ASeMFEwGHwECxtiOhGxdXyHtSXiDl2ZE/preview
 driveId2: 1eAiGAYSG14aAv7UL5F8Ex1sTVha1qG72/preview
+show_on_homepage: true
 ---
 ><font size=2>总结一下和游戏相关的123
 

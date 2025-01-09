@@ -3,6 +3,7 @@ layout: post
 title:  "全面失控的新手体验"
 tags: game
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>新手村任务:记录一下平时比较少玩的品类游戏体验；在思考什么算对游戏体验有深入理解
 

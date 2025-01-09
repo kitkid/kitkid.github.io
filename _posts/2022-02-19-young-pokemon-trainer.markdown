@@ -3,6 +3,7 @@ layout: post
 title:  "成为宝可梦训练家的前十五分钟"
 tags: game
 lang: zh-Hans
+show_on_homepage: true
 ---
 ><font size=2>复健练习
 
@@ -40,7 +41,7 @@ Games UX Challenge（游戏玩家体验挑战？）[^1]，挑战的主要两点�
 1. 操控移动：通过文字（「滑动左侧的方向按键」）和图标（方向指示，目的地指示）/动画（按键处的手指动画）来指示和引导玩家使用*摇杆键*操作宝可梦移动
 
     ![screenshot](/assets/images/posts/220219/01.png)
-    
+
 2. 普通攻击：轻点普通攻击按钮，击打一个野生宝可梦，即获得能量
 3. 如何得分：来到得分区，长按能量按钮，得分
 
