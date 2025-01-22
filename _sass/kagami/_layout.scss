@@ -94,6 +94,16 @@ article {
   font-size: 16px;
   }
 
+  .toc ul {
+    list-style: none; /* 移除默认的圆点或编号 */
+    margin: 0;
+    padding: 0 0 0 20px; /* 设置统一的缩进 */
+  }
+  
+  .toc ul li {
+    margin: 5px 0; /* 控制每个条目之间的间距 */
+  }
+  
   .toc ul li a {
     text-decoration: none;
     color: inherit;
