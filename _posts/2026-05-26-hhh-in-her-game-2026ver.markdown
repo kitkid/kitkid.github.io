@@ -10,7 +10,7 @@ driveId3: 1EtSDwKiNJmceQKfRQPUtZMQq50NQ37-N/preview
 show_on_homepage: true
 ---
 ><font size=2>总结一下2025-2026年可玩项目
-><font size=2>实例中的游戏截图均在项目已公开内容范围中
+><font size=2>仅面试申请用
 
 
 ## 项目一：AI叙事游戏
