@@ -38,7 +38,7 @@ Taptap上可下载demo体验。[^1]
 ## 项目三：AI Demo
 项目介绍：《IdleIdol》，结合桌宠+专注工具的AVG游戏
 
-负责内容：独自一周内利用AI工具（Tripo，Codex，Gemini）完成Demo
+负责内容：独自一周内利用AI工具（Tripo，Codex，Gemini）设计并完成Demo
 
 实机视频：
 
