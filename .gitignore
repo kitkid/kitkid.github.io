@@ -3,3 +3,7 @@
 _site
 Gemfile.lock
 _posts/doubandiary13
+.superpowers
+vendor/bundle
+.bundle
+.sass-cache
