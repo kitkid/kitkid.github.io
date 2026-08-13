@@ -1,0 +1,12 @@
+{% assign featured = site.playground | where: "featured", true | sort: "order" %}
+<section class="playground-featured" aria-labelledby="interactive-title">
+  <p class="section-label" id="interactive-title">Interactive</p>
+  <div class="playground-grid">
+    {% for item in featured limit: 3 %}
+      {% include playground-card.html item=item %}
+    {% endfor %}
+  </div>
+  {% if site.playground.size > 3 %}
+    <a class="playground-more" href="{{ '/playground/' | relative_url }}">and more →</a>
+  {% endif %}
+</section>

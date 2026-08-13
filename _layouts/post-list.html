@@ -6,6 +6,11 @@ layout: default
 
 {% include header.html %}
 
+{% if page.url == "/" %}
+  {% include playground-featured.html %}
+  <p class="section-label">Posts</p>
+{% endif %}
+
 <ul class="post-list">
   {% if page.url == "/" %}
     <!-- 如果是首页，筛选出仅带有 show_on_homepage: true 的文章 -->

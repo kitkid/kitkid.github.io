@@ -1,0 +1,64 @@
+.section-label {
+  margin: $spacing-unit 0 $spacing-unit / 2;
+  font-size: .875em;
+  font-variant-caps: all-petite-caps;
+  letter-spacing: .12em;
+}
+
+.playground-featured { margin: 0 0 $spacing-unit * 1.5; }
+
+.playground-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $spacing-unit / 2;
+}
+
+.playground-card {
+  display: block;
+  min-width: 0;
+  border-bottom: 0;
+  color: inherit;
+}
+
+.playground-card-media {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #f4f4f7;
+}
+
+.playground-card-media::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: #3c3c3c;
+  opacity: 0;
+  transition: opacity .5s ease-out;
+}
+
+.playground-card:hover .playground-card-media::after { opacity: .08; }
+.playground-card img { width: 100%; height: 100%; object-fit: cover; }
+.playground-card-placeholder { display: grid; place-items: center; height: 100%; font-family: "Press Start 2P", cursive; font-size: 6px; color: #777; }
+.playground-kind, .playground-wip { position: absolute; z-index: 1; padding: 4px 6px; font-family: "Press Start 2P", cursive; font-size: 6px; line-height: 1; color: #fff; background: #3c3c3c; }
+.playground-kind { right: 0; bottom: 0; }
+.playground-wip { left: 0; top: 0; }
+.playground-card-title, .playground-card-description { display: block; }
+.playground-card-title { margin-top: .45em; font-size: 1em; transition: color .5s ease-out; }
+.playground-card:hover .playground-card-title { color: #000; }
+.playground-card-description { margin-top: .25em; font-size: .75em; line-height: 1.5; }
+.playground-more { display: block; margin-top: $spacing-unit / 2; text-align: right; font-size: .875em; }
+.playground-page > p { margin: 0 0 $spacing-unit; }
+.playground-grid-list { margin-bottom: $spacing-unit * 2; }
+.playground-notice, .playground-controls { font-size: .875em; color: lighten($content-color, 25%); }
+.playground-frame { width: min(1100px, calc(100vw - #{$content-padding * 2})); aspect-ratio: var(--game-ratio); margin: 0 50% $spacing-unit; transform: translateX(-50%); background: #f4f4f7; }
+.playground-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.playground-unavailable { display: grid; place-items: center; aspect-ratio: 16 / 9; margin: 0 0 $spacing-unit; color: #777; background: #f4f4f7; font-family: "Press Start 2P", cursive; font-size: 10px; }
+
+@media screen and (max-width: 680px) {
+  .playground-grid { grid-template-columns: 1fr; }
+  .playground-card-media { aspect-ratio: 16 / 9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playground-card-media::after, .playground-card-title { transition-duration: 0s; }
+}

@@ -1,0 +1,14 @@
+{% assign item = include.item %}
+<a class="playground-card" href="{{ item.url | relative_url }}">
+  <div class="playground-card-media">
+    {% if item.thumb %}
+      <img src="{{ item.thumb | relative_url }}" alt="{{ item.title | escape }}">
+    {% else %}
+      <div class="playground-card-placeholder" aria-hidden="true">NO IMG</div>
+    {% endif %}
+    {% if item.status == "wip" %}<span class="playground-wip">WIP</span>{% endif %}
+    <span class="playground-kind">{{ item.kind | default: "game" | upcase }}</span>
+  </div>
+  <span class="playground-card-title">{{ item.title | escape }}</span>
+  <span class="playground-card-description">{{ item.description | escape }}{% if item.status == "wip" %}（施工中）{% endif %}</span>
+</a>

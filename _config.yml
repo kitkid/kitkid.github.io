@@ -36,6 +36,11 @@ google_analytics_4: G-9JR07VRDG8
 # Build settings
 markdown: kramdown
 
+collections:
+  playground:
+    output: true
+    permalink: /playground/:name/
+
 plugins:
   - jekyll-feed
   - jekyll-pdf-embed
