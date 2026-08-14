@@ -1,7 +1,7 @@
 ---
 layout: playground-list
 title: Playground
-lang: en
+lang: zh-Hans
 navbar: true
 position: 50
 ---
