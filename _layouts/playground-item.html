@@ -9,7 +9,7 @@ layout: default
     <p class="playground-notice">需要键盘操作，建议在电脑上游玩。</p>
   {% endif %}
   {% if page.status == "live" and page.entry %}
-    <div class="playground-frame" style="--game-ratio: {{ page.ratio | default: '16 / 9' }}; --game-ratio-portrait: {{ page.ratio_portrait | default: '9 / 16' }};">
+    <div class="playground-frame" style="--game-ratio: {{ page.ratio | default: '16 / 9' }};">
       <iframe src="{{ page.entry | relative_url }}" title="{{ page.title | escape }}" loading="lazy" sandbox="allow-scripts allow-pointer-lock{% if page.needs_storage %} allow-same-origin{% endif %}"></iframe>
     </div>
     <p class="playground-controls">{{ page.controls | escape }}</p>
@@ -18,5 +18,5 @@ layout: default
     <div class="playground-unavailable">UNDER CONSTRUCTION</div>
   {% endif %}
   {{ content }}
-  <p><a href="{{ '/playground/' | relative_url }}">← Playground</a></p>
+  <p><a href="{{ '/playground.html' | relative_url }}">← Playground</a></p>
 </article>
