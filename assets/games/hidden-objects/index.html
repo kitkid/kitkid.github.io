@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>喵喵捉迷藏 — Purr &amp; Seek</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Quicksand:wght@500;600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFF7EC;
+  --ink:#5C5470;
+  --ink-soft:#8B819B;
+  --rose:#F2A9A9;
+  --rose-deep:#E48989;
+  --butter:#FFD98E;
+  --sage:#A9CFA0;
+  --sky:#BFE3EE;
+  --card:#FFFFFF;
+  --shadow:0 8px 24px rgba(92,84,112,.16);
+  --round:22px;
+  --display:'ZCOOL KuaiLe', 'Baloo 2', 'PingFang SC', 'Microsoft YaHei', cursive;
+  --body:'Quicksand', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--body);
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+button{font-family:var(--display); cursor:pointer; border:none;}
+
+/* ---------- intro ---------- */
+#intro{
+  position:fixed; inset:0; z-index:50;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:
+    radial-gradient(circle at 20% 15%, #FFE9C7 0, transparent 40%),
+    radial-gradient(circle at 85% 80%, #D8EFD2 0, transparent 45%),
+    var(--paper);
+  text-align:center; padding:24px;
+  transition:opacity .6s ease, visibility .6s;
+}
+#intro.hidden{opacity:0; visibility:hidden;}
+#intro h1{
+  font-family:var(--display); font-weight:800;
+  font-size:clamp(2.6rem, 8vw, 4.6rem);
+  margin:.2em 0 0; color:var(--ink);
+  letter-spacing:.5px;
+}
+#intro h1 .amp{color:var(--rose-deep);}
+#intro p.tag{margin:.4em 0 1.6em; font-size:1.05rem; color:var(--ink-soft); font-weight:600;}
+.big-btn{
+  background:var(--rose); color:#fff;
+  font-size:1.35rem; font-weight:700;
+  padding:.7em 2.2em; border-radius:999px;
+  box-shadow:0 6px 0 var(--rose-deep), var(--shadow);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.big-btn:hover{transform:translateY(-2px);}
+.big-btn:active{transform:translateY(3px); box-shadow:0 2px 0 var(--rose-deep);}
+#introCat{width:min(300px,60vw); margin-bottom:6px;}
+#intro .hint-line{margin-top:1.6em; font-size:.85rem; color:var(--ink-soft);}
+
+/* ---------- game frame ---------- */
+#game{max-width:1080px; margin:0 auto; padding:14px 14px 40px; display:none;}
+#game.show{display:block;}
+
+#topbar{
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  padding:10px 4px 12px;
+}
+#chapterTitle{
+  font-family:var(--display); font-weight:800; font-size:1.5rem; margin:0;
+  display:flex; align-items:baseline; gap:.5em;
+}
+#chapterTitle .num{
+  font-size:.8rem; background:var(--butter); color:#8a6a2f;
+  padding:.15em .8em; border-radius:999px; font-weight:700; align-self:center;
+}
+#counter{font-weight:700; color:var(--ink-soft); font-size:.95rem;}
+#topbar .spacer{flex:1;}
+.icon-btn{
+  background:#fff; border-radius:999px; width:44px; height:44px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--shadow); font-size:1.2rem;
+  transition:transform .12s;
+}
+.icon-btn:hover{transform:scale(1.08);}
+.icon-btn:active{transform:scale(.94);}
+.pill-btn{
+  background:#fff; border-radius:999px; height:44px; padding:0 18px;
+  display:flex; align-items:center; gap:8px;
+  box-shadow:var(--shadow); font-size:1rem; font-weight:700; color:var(--ink);
+  transition:transform .12s;
+}
+.pill-btn:hover{transform:scale(1.05);}
+
+#portraits{
+  display:flex; gap:10px; flex-wrap:wrap; padding:0 4px 12px;
+}
+.chip{
+  width:58px; height:70px; background:#fff; border-radius:18px;
+  box-shadow:var(--shadow);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+  transition:transform .25s ease;
+  position:relative;
+}
+.chip svg{width:40px; height:34px;}
+.chip .nm{font-size:.58rem; font-weight:700; color:var(--ink-soft); letter-spacing:.2px;}
+.chip.found{background:#FFF2D9;}
+.chip.found .nm{color:var(--ink);}
+.chip.found::after{
+  content:"♥"; position:absolute; top:-6px; right:-4px;
+  background:var(--rose-deep); color:#fff; font-size:.6rem;
+  width:18px; height:18px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.chip.pop{animation:chipPop .5s cubic-bezier(.34,1.56,.64,1);}
+@keyframes chipPop{0%{transform:scale(1)}45%{transform:scale(1.25) rotate(-4deg)}100%{transform:scale(1)}}
+
+#stage{
+  position:relative; border-radius:var(--round); overflow:hidden;
+  box-shadow:var(--shadow); background:#fff;
+  user-select:none;
+  touch-action:none;
+  cursor:grab;
+}
+#stage:active{cursor:grabbing;}
+#stage svg{display:block; width:100%; height:auto;}
+
+#zoomCtrl{
+  position:absolute; right:10px; bottom:10px; z-index:5;
+  display:flex; flex-direction:column; gap:6px;
+}
+.zbtn{
+  width:40px; height:40px; border-radius:13px;
+  background:rgba(255,255,255,.92); box-shadow:var(--shadow);
+  font-size:1.15rem; font-weight:800; color:var(--ink);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .12s;
+}
+.zbtn:hover{transform:scale(1.08);}
+.zbtn:active{transform:scale(.92);}
+
+/* ---------- pop-up storybook ---------- */
+#storyModal{
+  position:fixed; inset:0; z-index:80; display:none;
+  align-items:center; justify-content:center; padding:14px;
+  background:rgba(40,35,60,.72); backdrop-filter:blur(4px);
+}
+#storyModal.show{display:flex;}
+#bookWrap{width:min(720px,96vw); display:flex; flex-direction:column; gap:12px; align-items:center;}
+#book{
+  width:100%; aspect-ratio:4/3; position:relative;
+  perspective:1700px;
+}
+.page{
+  position:absolute; inset:0; border-radius:20px; overflow:hidden;
+  background:#FFF9EC; box-shadow:0 14px 40px rgba(30,25,50,.4);
+  display:flex; flex-direction:column;
+  transform-origin:left center; transform-style:preserve-3d;
+  backface-visibility:hidden;
+  transition:transform .75s cubic-bezier(.4,.1,.3,1);
+  border-left:6px solid #E8D9BC;
+}
+.page.past{transform:rotateY(-112deg);}
+.page .scene3d{
+  flex:1.25; position:relative; perspective:900px; transform-style:preserve-3d;
+  overflow:hidden;
+}
+.bkpop{
+  position:absolute; transform-origin:50% 100%;
+  transform:rotateX(82deg) translateY(14px); opacity:0;
+  transition:transform .8s cubic-bezier(.34,1.35,.64,1), opacity .45s ease;
+  will-change:transform;
+}
+.bkpop svg{display:block; width:100%; height:auto;
+  filter:drop-shadow(0 6px 8px rgba(50,40,80,.22));}
+.page.current .bkpop{transform:rotateX(0) translateY(0); opacity:1;}
+.page .ptext{
+  flex:1; padding:14px 26px 18px; text-align:center;
+  background:linear-gradient(#FFFDF6,#FBF2DE);
+  border-top:2px dashed #EBD9B8;
+}
+.page .ptext h3{
+  font-family:var(--display); font-size:1.3rem; margin:.1em 0 .3em; color:var(--ink);
+}
+.page .ptext p{
+  margin:0; font-size:.92rem; line-height:1.85; color:#75688A; font-weight:500;
+  max-width:56ch; margin-inline:auto;
+}
+.pbtns{display:flex; gap:12px; justify-content:center; margin-top:12px;}
+#bookNav{display:flex; align-items:center; gap:14px;}
+#dots{display:flex; gap:7px;}
+#dots i{
+  width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.4);
+  transition:background .3s, transform .3s;
+}
+#dots i.on{background:#FFD98E; transform:scale(1.3);}
+@media (max-width:560px){
+  .page .ptext p{font-size:.8rem; line-height:1.7;}
+  .page .ptext h3{font-size:1.1rem;}
+}
+
+/* found / hint animations on inner cat group */
+.catInner{transform-box:fill-box; transform-origin:50% 100%;}
+.eyesHappy{display:none;}
+.cat .blush{opacity:0;}
+.cat.found .eyesOpen{display:none;}
+.cat.found .eyesHappy{display:block;}
+.cat.found .blush{opacity:1; transition:opacity .4s;}
+.cat.found .catInner{animation:foundBounce .85s cubic-bezier(.34,1.56,.64,1);}
+@keyframes foundBounce{
+  0%{transform:scale(1,1)}
+  25%{transform:scale(1.2,.78)}
+  50%{transform:scale(.88,1.16) translateY(-6px)}
+  70%{transform:scale(1.06,.94)}
+  100%{transform:scale(1,1)}
+}
+.cat.wiggle .catInner{animation:wiggle .7s ease;}
+@keyframes wiggle{
+  0%,100%{transform:rotate(0)}
+  25%{transform:rotate(-5deg)}
+  50%{transform:rotate(5deg)}
+  75%{transform:rotate(-3deg)}
+}
+.twinkle{animation:tw 2.4s ease-in-out infinite;}
+@keyframes tw{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* hearts overlay */
+#fx{position:absolute; inset:0; pointer-events:none; overflow:hidden;}
+.heart{
+  position:absolute; font-size:20px; color:var(--rose-deep);
+  animation:floatUp 1.15s ease-out forwards;
+}
+@keyframes floatUp{
+  0%{transform:translate(0,0) scale(.4) rotate(0); opacity:0;}
+  15%{opacity:1;}
+  100%{transform:translate(var(--dx), -90px) scale(1.15) rotate(var(--rot)); opacity:0;}
+}
+
+/* name toast */
+#toast{
+  position:fixed; left:50%; bottom:26px; transform:translate(-50%, 140%);
+  background:#fff; border-radius:24px; box-shadow:var(--shadow);
+  display:flex; align-items:center; gap:14px;
+  padding:12px 22px 12px 12px; z-index:60; max-width:min(480px, 92vw);
+  transition:transform .45s cubic-bezier(.34,1.4,.64,1);
+}
+#toast.show{transform:translate(-50%, 0);}
+#toast .face{
+  width:56px; height:56px; border-radius:50%; background:#FFF2D9; flex:none;
+  display:flex; align-items:center; justify-content:center;
+}
+#toast .face svg{width:44px; height:38px;}
+#toast .tname{font-family:var(--display); font-weight:800; font-size:1.1rem; margin:0;}
+#toast .trel{margin:2px 0 0; font-size:.85rem; color:var(--ink-soft); font-weight:600; line-height:1.35;}
+
+/* modals */
+.modal{
+  position:fixed; inset:0; z-index:70; display:none;
+  align-items:center; justify-content:center; padding:20px;
+  background:rgba(92,84,112,.35); backdrop-filter:blur(3px);
+}
+.modal.show{display:flex;}
+.modal .card{
+  background:var(--card); border-radius:28px; box-shadow:var(--shadow);
+  padding:30px 30px 26px; max-width:420px; width:100%; text-align:center;
+  animation:cardIn .5s cubic-bezier(.34,1.45,.64,1);
+}
+@keyframes cardIn{0%{transform:translateY(30px) scale(.9); opacity:0}100%{transform:none; opacity:1}}
+.card h2{font-family:var(--display); font-weight:800; margin:.2em 0 .1em; font-size:1.6rem;}
+.card p{color:var(--ink-soft); font-weight:600; margin:.4em 0 1.2em; line-height:1.5;}
+.sticker{
+  width:150px; height:150px; margin:6px auto 10px;
+  animation:stickerSpin .9s cubic-bezier(.34,1.4,.64,1);
+  filter:drop-shadow(0 6px 10px rgba(92,84,112,.25));
+}
+@keyframes stickerSpin{0%{transform:scale(0) rotate(-140deg)}100%{transform:scale(1) rotate(0)}}
+
+/* album */
+#albumGrid{display:flex; gap:18px; justify-content:center; flex-wrap:wrap; margin:10px 0 18px;}
+.slot{
+  width:110px; height:130px; border-radius:20px; background:#F6EEDF;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  border:2px dashed #E3D5BC;
+}
+.slot svg{width:74px; height:74px;}
+.slot .sn{font-size:.68rem; font-weight:700; color:var(--ink-soft);}
+.slot.empty svg{opacity:.18; filter:grayscale(1);}
+.slot.earned{border-style:solid; border-color:var(--butter); background:#FFF6DF;}
+
+footer{
+  text-align:center; color:var(--ink-soft); font-size:.8rem; font-weight:600;
+  padding:24px 10px 30px;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001s !important; transition-duration:.001s !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ INTRO ============ -->
+<div id="intro">
+  <svg id="introCat" viewBox="0 0 220 150"></svg>
+  <h1>喵喵<span class="amp">·</span>捉迷藏</h1>
+  <p class="tag">二十一只小猫藏了起来,你能把每一位朋友都找出来吗?</p>
+  <button class="big-btn" id="startBtn">开始寻找 🐾</button>
+  <p class="hint-line">小提示:猫猫最喜欢躲在灌木、木桶和暖暖的屋顶上,留意小耳朵和尾巴!<br>画面可以拖动,滚轮或双指还能放大细看哦。</p>
+</div>
+
+<!-- ============ GAME ============ -->
+<div id="game">
+  <div id="topbar">
+    <h2 id="chapterTitle"><span class="num">第 1 章</span><span id="chName">阳光花园</span></h2>
+    <span id="counter">已找到 0 / 5 位朋友</span>
+    <div class="spacer"></div>
+    <button class="pill-btn" id="hintBtn" title="会有一只猫猫扭一扭">🐾 提示</button>
+    <button class="icon-btn" id="albumBtn" title="贴纸收藏册">📖</button>
+    <button class="icon-btn" id="muteBtn" title="声音开关">🔊</button>
+  </div>
+  <div id="portraits"></div>
+  <div id="stage">
+    <div id="sceneHolder"></div>
+    <div id="fx"></div>
+    <div id="zoomCtrl">
+      <button class="zbtn" id="zin" title="放大">＋</button>
+      <button class="zbtn" id="zout" title="缩小">－</button>
+      <button class="zbtn" id="zreset" title="复位">⌂</button>
+    </div>
+  </div>
+  <footer>用胡须和阳光做成的小游戏,每一只猫都在等你。♥</footer>
+</div>
+
+<!-- name toast -->
+<div id="toast">
+  <div class="face"><svg id="toastFace" viewBox="0 0 100 84"></svg></div>
+  <div>
+    <p class="tname" id="toastName">麻糬</p>
+    <p class="trel" id="toastRel">温柔的大姐姐。</p>
+  </div>
+</div>
+
+<!-- reward modal -->
+<div class="modal" id="rewardModal">
+  <div class="card">
+    <svg class="sticker" id="rewardSticker" viewBox="0 0 120 120"></svg>
+    <h2 id="rewardTitle">本章完成!</h2>
+    <p id="rewardText">你获得了向日葵徽章。</p>
+    <button class="big-btn" id="nextBtn">下一章 →</button>
+  </div>
+</div>
+
+<!-- album modal -->
+<div class="modal" id="albumModal">
+  <div class="card">
+    <h2>贴纸收藏册</h2>
+    <p>每一次寻找留下的小小纪念。</p>
+    <div id="albumGrid"></div>
+    <button class="big-btn" id="albumClose">继续寻找</button>
+  </div>
+</div>
+
+<!-- pop-up storybook -->
+<div id="storyModal">
+  <div id="bookWrap">
+    <div id="book"></div>
+    <div id="bookNav">
+      <button class="pill-btn" id="pgPrev">‹ 上一页</button>
+      <div id="dots"></div>
+      <button class="pill-btn" id="pgNext">下一页 ›</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   helpers
+========================================================= */
+const SVGNS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs = {}, children = []) {
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  for (const c of children) n.appendChild(c);
+  return n;
+}
+function grp(attrs = {}, children = []) { return el('g', attrs, children); }
+const $ = s => document.querySelector(s);
+const rand = (a, b) => a + Math.random() * (b - a);
+
+/* =========================================================
+   cat drawing
+   palette per cat: { fur, belly, ear, patches? }
+========================================================= */
+function catFace(g, p, cx, cy, r) {
+  // eyes open
+  const open = grp({ class: 'eyesOpen' }, [
+    el('circle', { cx: cx - r * .38, cy: cy - r * .05, r: r * .11, fill: '#4A4159' }),
+    el('circle', { cx: cx + r * .38, cy: cy - r * .05, r: r * .11, fill: '#4A4159' }),
+    el('circle', { cx: cx - r * .34, cy: cy - r * .09, r: r * .04, fill: '#fff' }),
+    el('circle', { cx: cx + r * .42, cy: cy - r * .09, r: r * .04, fill: '#fff' }),
+  ]);
+  // happy eyes ^ ^
+  const happy = grp({ class: 'eyesHappy', fill: 'none', stroke: '#4A4159',
+    'stroke-width': r * .09, 'stroke-linecap': 'round' }, [
+    el('path', { d: `M ${cx - r * .5} ${cy} q ${r * .12} ${-r * .22} ${r * .24} 0` }),
+    el('path', { d: `M ${cx + r * .26} ${cy} q ${r * .12} ${-r * .22} ${r * .24} 0` }),
+  ]);
+  const blush = grp({ class: 'blush', fill: '#F2A9A9', opacity: 0 }, [
+    el('ellipse', { cx: cx - r * .55, cy: cy + r * .22, rx: r * .16, ry: r * .1 }),
+    el('ellipse', { cx: cx + r * .55, cy: cy + r * .22, rx: r * .16, ry: r * .1 }),
+  ]);
+  const nose = el('path', {
+    d: `M ${cx - r * .08} ${cy + r * .16} h ${r * .16} l ${-r * .08} ${r * .1} z`,
+    fill: '#E48989'
+  });
+  const mouth = el('path', {
+    d: `M ${cx} ${cy + r * .26} q ${-r * .1} ${r * .14} ${-r * .2} ${r * .04} M ${cx} ${cy + r * .26} q ${r * .1} ${r * .14} ${r * .2} ${r * .04}`,
+    fill: 'none', stroke: '#4A4159', 'stroke-width': r * .05, 'stroke-linecap': 'round'
+  });
+  const whisk = grp({ stroke: 'rgba(74,65,89,.45)', 'stroke-width': r * .04, 'stroke-linecap': 'round' }, [
+    el('line', { x1: cx - r * .95, y1: cy + r * .1, x2: cx - r * .62, y2: cy + r * .14 }),
+    el('line', { x1: cx - r * .93, y1: cy + r * .28, x2: cx - r * .6, y2: cy + r * .24 }),
+    el('line', { x1: cx + r * .62, y1: cy + r * .14, x2: cx + r * .95, y2: cy + r * .1 }),
+    el('line', { x1: cx + r * .6, y1: cy + r * .24, x2: cx + r * .93, y2: cy + r * .28 }),
+  ]);
+  g.append(open, happy, blush, nose, mouth, whisk);
+}
+
+function catEars(g, p, cx, cy, r) {
+  const e = (sx) => grp({}, [
+    el('path', { d: `M ${cx + sx * r * .78} ${cy - r * .5} L ${cx + sx * r * .55} ${cy - r * 1.28} L ${cx + sx * r * .12} ${cy - r * .88} Z`, fill: p.ear || p.fur }),
+    el('path', { d: `M ${cx + sx * r * .6} ${cy - r * .62} L ${cx + sx * r * .5} ${cy - r * 1.05} L ${cx + sx * r * .28} ${cy - r * .82} Z`, fill: '#F6C6C6' }),
+  ]);
+  g.append(e(-1), e(1));
+}
+
+function catPatches(g, p, cx, cy, r) {
+  if (!p.patches) return;
+  g.append(
+    el('path', { d: `M ${cx - r * .1} ${cy - r} A ${r} ${r} 0 0 1 ${cx + r * .85} ${cy - r * .45} L ${cx + r * .2} ${cy - r * .3} Z`, fill: p.patches, opacity: .9 }),
+    el('circle', { cx: cx - r * .62, cy: cy - r * .5, r: r * .3, fill: p.patches, opacity: .9 })
+  );
+}
+
+/* pose builders — origin (0,0) is bottom-center of the cat */
+function poseSit(p) {
+  const g = grp();
+  // tail
+  g.append(el('path', {
+    d: 'M 26 -8 q 30 -2 32 -30 q 1 -14 -10 -16',
+    fill: 'none', stroke: p.fur, 'stroke-width': 11, 'stroke-linecap': 'round'
+  }));
+  // body
+  g.append(el('path', { d: 'M -30 0 Q -34 -52 0 -54 Q 34 -52 30 0 Z', fill: p.fur }));
+  g.append(el('path', { d: 'M -30 -2 Q -33 -42 -12 -52 Q -25 -33 -23 -2 Z', fill: 'rgba(58,44,84,.15)' }));
+  g.append(el('path', { d: 'M 8 -52 Q 27 -46 29 -16', stroke: 'rgba(255,255,255,.4)', 'stroke-width': 5, fill: 'none', 'stroke-linecap': 'round' }));
+  g.append(el('ellipse', { cx: 0, cy: -16, rx: 15, ry: 20, fill: p.belly }));
+  // front paws
+  g.append(
+    el('ellipse', { cx: -11, cy: -3, rx: 8, ry: 6, fill: p.fur }),
+    el('ellipse', { cx: 11, cy: -3, rx: 8, ry: 6, fill: p.fur })
+  );
+  // head
+  const hy = -68, hr = 22;
+  catEars(g, p, 0, hy, hr);
+  g.append(el('circle', { cx: 0, cy: hy, r: hr, fill: p.fur }));
+  catPatches(g, p, 0, hy, hr);
+  g.append(el('path', { d: `M -13 ${hy - 15} Q 0 ${hy - 22} 12 ${hy - 16}`, stroke: 'rgba(255,255,255,.45)', 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }));
+  g.append(el('ellipse', { cx: 0, cy: hy + hr * .35, rx: hr * .55, ry: hr * .42, fill: p.belly, opacity: .8 }));
+  catFace(g, p, 0, hy, hr);
+  return g;
+}
+
+function poseLoaf(p) {
+  const g = grp();
+  g.append(el('path', {
+    d: 'M -36 0 Q -38 -30 -8 -32 L 22 -32 Q 40 -30 38 0 Z', fill: p.fur
+  }));
+  g.append(el('path', { d: 'M -36 -2 Q -20 4 34 0 Q 38 -4 38 -9 Q 0 -1 -34 -10 Z', fill: 'rgba(58,44,84,.14)' }));
+  g.append(el('path', { d: 'M -2 -30 Q 18 -32 32 -22', stroke: 'rgba(255,255,255,.4)', 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }));
+  // tail wrapped in front
+  g.append(el('path', {
+    d: 'M 36 -6 q 8 8 -4 10 q -30 4 -56 -2',
+    fill: 'none', stroke: p.fur, 'stroke-width': 10, 'stroke-linecap': 'round'
+  }));
+  const hy = -40, hr = 20;
+  catEars(g, p, -14, hy, hr);
+  g.append(el('circle', { cx: -14, cy: hy, r: hr, fill: p.fur }));
+  catPatches(g, p, -14, hy, hr);
+  catFace(g, p, -14, hy, hr);
+  return g;
+}
+
+function posePeek(p) {
+  const g = grp();
+  const hy = -22, hr = 21;
+  catEars(g, p, 0, hy, hr);
+  g.append(el('circle', { cx: 0, cy: hy, r: hr, fill: p.fur }));
+  catPatches(g, p, 0, hy, hr);
+  g.append(el('path', { d: 'M -12 -36 Q 0 -42 12 -37', stroke: 'rgba(255,255,255,.45)', 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }));
+  catFace(g, p, 0, hy, hr);
+  g.append(
+    el('ellipse', { cx: -13, cy: 0, rx: 8, ry: 6, fill: p.fur }),
+    el('ellipse', { cx: 13, cy: 0, rx: 8, ry: 6, fill: p.fur }),
+    el('path', { d: 'M -16 -1 v 3 M -12 -1 v 3 M 10 -1 v 3 M 14 -1 v 3', stroke: 'rgba(74,65,89,.3)', 'stroke-width': 1.6, 'stroke-linecap': 'round' })
+  );
+  return g;
+}
+
+const POSES = { sit: poseSit, loaf: poseLoaf, peek: posePeek };
+
+/* mini head for portraits & toast (viewBox 0 0 100 84) */
+function miniHead(p, silhouette) {
+  const g = grp();
+  const col = silhouette ? { fur: '#D5CEDE', belly: '#E4DEEB', ear: '#D5CEDE' } : p;
+  const cx = 50, cy = 46, r = 26;
+  catEars(g, col, cx, cy, r);
+  g.append(el('circle', { cx, cy, r, fill: col.fur }));
+  if (!silhouette) { catPatches(g, p, cx, cy, r); catFace(g, p, cx, cy, r); }
+  else g.append(el('text', { x: cx, y: cy + 7, 'text-anchor': 'middle', 'font-size': 22, fill: '#B7AEC4', 'font-family': 'Baloo 2' , 'font-weight':'800'}, [document.createTextNode('?')]));
+  return g;
+}
+
+/* place a hidden cat into a scene */
+function placeCat(root, cat, x, y, scale, pose, flip) {
+  const outer = grp({
+    class: 'cat', 'data-id': cat.id,
+    transform: `translate(${x} ${y}) scale(${(flip ? -scale : scale)} ${scale})`
+  });
+  const inner = grp({ class: 'catInner', filter: 'url(#roughCat)' });
+  inner.append(POSES[pose](cat.pal));
+  // generous invisible hit area
+  const hitH = pose === 'peek' ? 60 : 100;
+  inner.append(el('rect', { x: -46, y: -hitH, width: 92, height: hitH + 12, fill: 'transparent' }));
+  outer.append(inner);
+  root.append(outer);
+  return outer;
+}
+
+/* =========================================================
+   cat data — names & relationships
+========================================================= */
+const PALS = {
+  cream:  { fur: '#F3DDB8', belly: '#FBF0DC', ear: '#F3DDB8' },
+  orange: { fur: '#F2A65E', belly: '#FBD9B4', ear: '#F2A65E' },
+  gray:   { fur: '#B6B0C6', belly: '#DDD8E8', ear: '#B6B0C6' },
+  rose:   { fur: '#EFB6B6', belly: '#FADDDD', ear: '#EFB6B6' },
+  brown:  { fur: '#C08A5E', belly: '#E5C6A6', ear: '#C08A5E' },
+  butter: { fur: '#F5CE73', belly: '#FCE9BB', ear: '#F5CE73' },
+  black:  { fur: '#57506B', belly: '#7C7492', ear: '#57506B' },
+  slate:  { fur: '#8E8AA6', belly: '#C0BCD2', ear: '#8E8AA6' },
+  white:  { fur: '#FDF6EC', belly: '#FFFDF8', ear: '#F3E7D6' },
+  calico: { fur: '#FDF3E3', belly: '#FFFBF2', ear: '#F2A65E', patches: '#F2A65E' },
+  bluegray:{ fur: '#9AA3C4', belly: '#C7CDE3', ear: '#9AA3C4' },
+  snow:   { fur: '#F4F1F7', belly: '#FFFFFF', ear: '#E4DEF0' },
+  night:  { fur: '#4E4867', belly: '#6E6788', ear: '#4E4867' },
+  maple:  { fur: '#E88B5A', belly: '#F7C9A8', ear: '#E88B5A' },
+  latte:  { fur: '#D9B48A', belly: '#F0DCC0', ear: '#D9B48A' },
+  olive:  { fur: '#9AA284', belly: '#C6CBB0', ear: '#9AA284' },
+  ash:    { fur: '#8B849C', belly: '#B5AEC6', ear: '#8B849C' },
+  ember:  { fur: '#D9713F', belly: '#F2B48C', ear: '#D9713F' },
+  ink:    { fur: '#5E5887', belly: '#837CA8', ear: '#5E5887' },
+};
+
+const CHAPTERS = [
+  {
+    name: '阳光花园',
+    sticker: 'sunflower',
+    stickerName: '向日葵徽章',
+    rewardText: '花园的猫猫们为你做了一枚向日葵徽章。饼干爷爷眯着眼说:你的眼睛真尖!',
+    build: buildGarden,
+    cats: [
+      { id: 'mochi',  name: '麻糬',  pal: PALS.cream,  meow: 420, rel: '温柔的大姐姐,总能第一个找到阳光最暖的角落打盹。' },
+      { id: 'miso',   name: '味噌',   pal: PALS.orange, meow: 560, rel: '麻糬的弟弟,姐姐做什么他就学什么——学得笨笨的。' },
+      { id: 'clover', name: '三叶', pal: PALS.gray,   meow: 470, rel: '害羞的园丁猫,和波比从小就是最好的朋友。' },
+      { id: 'poppy',  name: '波比',  pal: PALS.rose,   meow: 610, rel: '又勇敢又爱蹦跶,愿意跟着三叶走到篱笆的尽头。' },
+      { id: 'biscuit',name: '饼干爷爷', pal: PALS.brown, meow: 330, rel: '大家的爷爷,关于老谷仓的故事一年比一年长。' },
+    ]
+  },
+  {
+    name: '温馨市集',
+    sticker: 'bread',
+    stickerName: '暖面包挂饰',
+    rewardText: '布丁为你烤了一只小小的面包挂饰。咪咪保证会告诉所有猫:你有多厉害!',
+    build: buildMarket,
+    cats: [
+      { id: 'pudding',name: '布丁',pal: PALS.butter, meow: 440, rel: '面包摊的主人,是麻糬的表妹——软乎乎是家族遗传。' },
+      { id: 'sesame', name: '芝麻', pal: PALS.black,  meow: 380, rel: '布丁的生意伙伴。他负责打盹,她负责烤面包。' },
+      { id: 'nori',   name: '海苔',   pal: PALS.slate,  meow: 350, rel: '鱼摊边安静的朋友,大部分时候用慢慢眨眼来说话。' },
+      { id: 'tofu',   name: '豆腐',   pal: PALS.white,  meow: 680, rel: '海苔的小学徒,还在练习怎么摆出严肃的表情。' },
+      { id: 'mimi',   name: '咪咪',   pal: PALS.calico, meow: 520, rel: '市集的小喇叭,知道每只猫最爱的零食——包括你的。' },
+      { id: 'latte',  name: '拿铁',  pal: PALS.latte,  meow: 460, rel: '市集的新常客,用蹭蹭头来跟布丁换面包。' },
+      { id: 'olive',  name: '橄榄',  pal: PALS.olive,  meow: 410, rel: '海苔的姐姐,把鱼摊擦得锃亮,还负责看住豆腐。' },
+    ]
+  },
+  {
+    name: '星空屋顶',
+    sticker: 'star',
+    stickerName: '流星勋章',
+    rewardText: '露娜为你别上流星勋章。二十一位朋友全部找到——整个屋顶都在呼噜噜。',
+    build: buildRooftop,
+    cats: [
+      { id: 'luna',   name: '露娜',   pal: PALS.bluegray, meow: 400, rel: '观星的猫。饼干爷爷把他记得的星座都教给了她。' },
+      { id: 'comet',  name: '彗星',  pal: PALS.snow,   meow: 540, rel: '露娜的赛跑对手,屋顶上跑得最快的猫——他自己也这么觉得。' },
+      { id: 'pepper', name: '胡椒', pal: PALS.night,  meow: 360, rel: '守夜的猫,非常勇敢——除了遇到飞蛾。别提飞蛾的事。' },
+      { id: 'maple',  name: '枫糖',  pal: PALS.maple,  meow: 500, rel: '跳跃冠军。花园里的小味噌每天都在偷偷模仿她。' },
+      { id: 'yuki',   name: '小雪',   pal: PALS.snow,   meow: 640, rel: '露娜的妹妹,最安静的猫——连星星都要凑近才能听见她。' },
+      { id: 'ash',    name: '灰灰',    pal: PALS.ash,    meow: 340, rel: '胡椒的巡逻搭档,同样对飞蛾的事绝口不提。' },
+      { id: 'cloudy', name: '云朵',  pal: PALS.white,  meow: 580, rel: '彗星的头号粉丝,每场比赛都参加,跑到第二个屋顶就睡着了。' },
+      { id: 'ember',  name: '焰儿',  pal: PALS.ember,  meow: 480, rel: '枫糖的妈妈,教会了她每一次勇敢的起跳和软软的落地。' },
+      { id: 'inky',   name: '墨墨',    pal: PALS.ink,    meow: 300, rel: '小雪的神秘朋友,眨一下眼他就不见了。他喜欢这样。' },
+    ]
+  }
+];
+
+/* =========================================================
+   scenes  (viewBox 0 0 960 600)
+========================================================= */
+function sceneRoot() {
+  const svg = el('svg', { viewBox: '0 0 960 600', 'aria-label': 'hidden object scene' });
+  // hand-painted look: turbulence-displaced edges at three scales + paper grain
+  const mkRough = (id, freq, scale, seed) => {
+    const f = el('filter', { id, x: '-15%', y: '-15%', width: '130%', height: '130%' });
+    f.append(el('feTurbulence', { type: 'fractalNoise', baseFrequency: freq, numOctaves: 2, seed, result: 'n' }));
+    f.append(el('feDisplacementMap', { in: 'SourceGraphic', in2: 'n', scale, xChannelSelector: 'R', yChannelSelector: 'G' }));
+    return f;
+  };
+  const paper = el('filter', { id: 'paper', x: '0%', y: '0%', width: '100%', height: '100%' });
+  paper.append(el('feTurbulence', { type: 'fractalNoise', baseFrequency: .9, numOctaves: 2, seed: 4 }));
+  paper.append(el('feColorMatrix', { type: 'matrix', values: '0 0 0 0 0.42  0 0 0 0 0.36  0 0 0 0 0.30  0 0 0 0.10 0' }));
+  svg.append(el('defs', {}, [
+    mkRough('roughBig', .012, 9, 7),
+    mkRough('rough', .03, 5, 11),
+    mkRough('roughCat', .06, 2.4, 3),
+    paper
+  ]));
+  return svg;
+}
+function deco(attrs, children) { const g = grp(attrs, children); g.setAttribute('pointer-events', 'none'); return g; }
+function paperGrain(svg) {
+  svg.append(deco({}, [el('rect', { width: 960, height: 600, filter: 'url(#paper)' })]));
+}
+
+/* irregular painterly blob — a single thick brush daub */
+function daub(cx, cy, rx, ry, fill, opacity = 1, rot = 0, jit = .2) {
+  const N = 9, pts = [];
+  for (let i = 0; i < N; i++) {
+    const a = i / N * Math.PI * 2;
+    const jr = 1 + rand(-jit, jit);
+    pts.push([Math.cos(a) * rx * jr, Math.sin(a) * ry * jr]);
+  }
+  let d = '';
+  for (let i = 1; i <= N; i++) {
+    const p = pts[i % N], q = pts[i - 1];
+    const mx = (p[0] + q[0]) / 2, my = (p[1] + q[1]) / 2;
+    d += (i === 1 ? `M ${(q[0] + pts[N - 1][0]) / 2} ${(q[1] + pts[N - 1][1]) / 2} ` : '') + `Q ${q[0]} ${q[1]} ${mx} ${my} `;
+  }
+  return el('path', { d: d + 'Z', fill, opacity, transform: `translate(${cx} ${cy}) rotate(${rot})` });
+}
+
+/* lighten (amt>0) or darken (amt<0) a hex color */
+function tint(hex, amt) {
+  const n = parseInt(hex.slice(1), 16);
+  const f = c => Math.max(0, Math.min(255, Math.round(amt >= 0 ? c + (255 - c) * amt : c * (1 + amt))));
+  return `rgb(${f(n >> 16 & 255)},${f(n >> 8 & 255)},${f(n & 255)})`;
+}
+
+function cloud(x, y, s, fill) {
+  const g = grp({ transform: `translate(${x} ${y}) scale(${s})`, filter: 'url(#rough)' });
+  g.append(
+    daub(0, 12, 34, 9, 'rgba(120,130,170,.16)'),
+    daub(0, 2, 40, 18, fill, .96),
+    daub(-26, 8, 24, 12, fill, .92),
+    daub(28, 8, 26, 13, fill, .92),
+    daub(-6, -7, 22, 10, tint('#FFFFFF', 0), .75)
+  );
+  return g;
+}
+function flower(x, y, petal, center) {
+  const g = grp({ transform: `translate(${x} ${y})` });
+  g.append(el('line', { x1: 0, y1: 0, x2: 0, y2: 18, stroke: '#6FA05B', 'stroke-width': 3.5 }));
+  for (let i = 0; i < 5; i++) {
+    const a = i / 5 * Math.PI * 2;
+    g.append(daub(Math.cos(a) * 6, Math.sin(a) * 6 - 4, 5.5, 5, petal, .95, 0, .3));
+  }
+  g.append(daub(0, -4, 4, 4, center, 1, 0, .25));
+  return g;
+}
+function bush(x, y, s, c1, c2) {
+  const g = grp({ transform: `translate(${x} ${y}) scale(${s})`, filter: 'url(#rough)' });
+  g.append(
+    daub(0, 12, 62, 32, tint(c1, -.24)),
+    daub(-26, 2, 42, 28, c1),
+    daub(26, 2, 42, 28, c2),
+    daub(-6, -14, 34, 20, tint(c2, .18)),
+    daub(14, -10, 20, 12, tint(c2, .34), .85),
+    daub(-30, -6, 16, 10, tint(c1, .3), .7),
+    el('circle', { cx: -14, cy: -16, r: 4, fill: '#F2A9A9' }),
+    el('circle', { cx: 18, cy: -8, r: 4, fill: '#F2A9A9' })
+  );
+  return g;
+}
+
+/* ---------- chapter 1: garden ---------- */
+function buildGarden(cats) {
+  const svg = sceneRoot();
+  svg.append(el('defs', {}, [
+    el('linearGradient', { id: 'skyG', x1: 0, y1: 0, x2: 0, y2: 1 }, [
+      el('stop', { offset: '0', 'stop-color': '#A9D8E8' }),
+      el('stop', { offset: '.55', 'stop-color': '#D9ECD6' }),
+      el('stop', { offset: '1', 'stop-color': '#FBEFC9' }),
+    ])
+  ]));
+  svg.append(el('rect', { width: 960, height: 600, fill: 'url(#skyG)' }));
+
+  // sun — layered warm daubs
+  const sky = deco({ filter: 'url(#rough)' });
+  sky.append(daub(840, 92, 58, 58, '#FFE9B0', .55));
+  sky.append(daub(840, 92, 46, 46, '#FFD98E', .95));
+  sky.append(daub(830, 82, 20, 15, '#FFF3CE', .8));
+  for (let i = 0; i < 8; i++) {
+    const a = i / 8 * Math.PI * 2 + .35;
+    sky.append(el('line', { x1: 840 + Math.cos(a) * 60, y1: 92 + Math.sin(a) * 60, x2: 840 + Math.cos(a) * 76, y2: 92 + Math.sin(a) * 76, stroke: '#FFD98E', 'stroke-width': 7, 'stroke-linecap': 'round', opacity: .9 }));
+  }
+  sky.append(cloud(180, 80, 1, '#FFFDF6'), cloud(430, 130, .8, '#FFF6E4'), cloud(680, 60, .7, '#FFFDF6'));
+  svg.append(sky);
+
+  // hills with brushy light bands and shadow
+  svg.append(deco({ filter: 'url(#roughBig)' }, [
+    el('path', { d: 'M0 340 Q 240 260 480 330 T 960 320 V 600 H 0 Z', fill: '#C3DEA0' }),
+    el('path', { d: 'M0 340 Q 240 260 480 330 T 960 320 l 0 26 Q 700 296 480 356 Q 240 288 0 366 Z', fill: '#DEEEBB', opacity: .75 }),
+    el('path', { d: 'M0 420 Q 300 360 620 420 T 960 410 V 600 H 0 Z', fill: '#A3CF8F' }),
+    el('path', { d: 'M0 448 Q 300 388 620 448 T 960 438 V 600 H 0 Z', fill: '#8CBB7B', opacity: .55 }),
+    el('rect', { x: 0, y: 500, width: 960, height: 100, fill: '#92C280' }),
+    daub(300, 470, 90, 15, '#C9E3A8', .4),
+    daub(700, 505, 110, 16, '#C9E3A8', .35),
+    daub(160, 548, 120, 18, '#79AC6B', .4),
+    daub(560, 578, 150, 20, '#79AC6B', .35),
+  ]));
+
+  // big tree — grooved trunk, foliage as clustered daubs
+  const tree = deco({ filter: 'url(#rough)' });
+  tree.append(el('path', { d: 'M150 470 Q 140 340 150 250 Q 152 230 168 232 Q 176 340 176 470 Z', fill: '#9A7048' }));
+  tree.append(el('path', { d: 'M155 460 Q 148 350 156 262', fill: 'none', stroke: '#7E5A38', 'stroke-width': 7, opacity: .55, 'stroke-linecap': 'round' }));
+  tree.append(el('path', { d: 'M170 452 Q 172 360 167 272', fill: 'none', stroke: '#C99B6C', 'stroke-width': 4, opacity: .6, 'stroke-linecap': 'round' }));
+  tree.append(el('path', { d: 'M158 300 q 60 -10 96 6', fill: 'none', stroke: '#9A7048', 'stroke-width': 14, 'stroke-linecap': 'round' }));
+  [[130, 210, 64, '#7CB066'], [205, 185, 58, '#93C57B'], [258, 240, 50, '#7CB066'],
+   [168, 258, 46, '#89BD73'], [96, 250, 40, '#70A45B']]
+    .forEach(([x, y, r, c]) => tree.append(daub(x, y, r, r * .88, c)));
+  tree.append(
+    daub(150, 180, 46, 32, '#B5DA98', .85),
+    daub(226, 162, 34, 22, '#CBE7AE', .8),
+    daub(118, 236, 30, 18, '#5C9149', .5),
+    daub(242, 268, 26, 16, '#5C9149', .45)
+  );
+  svg.append(tree);
+  placeCat(svg, cats[0], 246, 302, .58, 'loaf', false);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    daub(292, 280, 32, 26, '#93C57B'),
+    daub(300, 266, 20, 13, '#B5DA98', .85)
+  ]));
+
+  // birdhouse
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('rect', { x: 742, y: 300, width: 7, height: 130, fill: '#9A7048' }),
+    el('rect', { x: 722, y: 258, width: 46, height: 44, rx: 6, fill: '#E3AE74' }),
+    el('path', { d: 'M727 262 v 36', stroke: '#F2CE9C', 'stroke-width': 4, opacity: .7 }),
+    el('path', { d: 'M716 260 L745 236 L774 260 Z', fill: '#B27E4F' }),
+    el('circle', { cx: 745, cy: 280, r: 8, fill: '#5c4128' }),
+  ]));
+
+  // fence — Miso peeks over the rail
+  const fence = deco({ filter: 'url(#rough)' });
+  fence.append(el('rect', { x: 380, y: 395, width: 330, height: 8, rx: 4, fill: '#E2CBA1' }));
+  svg.append(fence);
+  placeCat(svg, cats[1], 552, 398, .62, 'peek', false);
+  const pickets = deco({ filter: 'url(#rough)' });
+  for (let i = 0; i < 9; i++) {
+    const px = 386 + i * 38;
+    pickets.append(el('path', { d: `M${px} 380 h 20 v 60 h -20 z M${px} 380 l 10 -10 l 10 10`, fill: '#F3E3C1' }));
+    pickets.append(el('path', { d: `M${px + 4} 384 v 50`, stroke: '#FFF7E2', 'stroke-width': 3, opacity: .8 }));
+    pickets.append(el('path', { d: `M${px + 16} 384 v 52`, stroke: '#D6BC8F', 'stroke-width': 3, opacity: .7 }));
+  }
+  pickets.append(el('rect', { x: 380, y: 418, width: 330, height: 8, rx: 4, fill: '#E2CBA1' }));
+  svg.append(pickets);
+
+  // Clover behind the middle bush
+  placeCat(svg, cats[2], 340, 505, .8, 'sit', true);
+  svg.append(deco({}, [bush(340, 505, 1.05, '#7CB066', '#93C57B')]));
+
+  // flowerpot with Poppy peeking
+  placeCat(svg, cats[3], 236, 522, .66, 'peek', false);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('path', { d: 'M200 522 h 72 l -10 52 h -52 z', fill: '#C97D57' }),
+    el('path', { d: 'M209 528 l 6 40', stroke: '#E5A57E', 'stroke-width': 6, opacity: .8 }),
+    el('path', { d: 'M261 528 l -6 40', stroke: '#A6603D', 'stroke-width': 6, opacity: .6 }),
+    el('rect', { x: 194, y: 514, width: 84, height: 14, rx: 6, fill: '#DE9A72' }),
+  ]));
+
+  // watering can hides Grandpa Biscuit
+  placeCat(svg, cats[4], 520, 560, .85, 'sit', false);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('path', { d: 'M430 512 h 76 a10 10 0 0 1 10 10 v 40 a10 10 0 0 1 -10 10 h -76 a10 10 0 0 1 -10 -10 v -40 a 10 10 0 0 1 10 -10 z', fill: '#8FADCE' }),
+    el('path', { d: 'M436 522 q -2 26 4 48', stroke: '#B7CCE4', 'stroke-width': 8, opacity: .85, fill: 'none' }),
+    el('path', { d: 'M498 524 q 4 22 -2 44', stroke: '#6E90B6', 'stroke-width': 8, opacity: .7, fill: 'none' }),
+    el('path', { d: 'M420 532 l -34 -18 l 4 -10 l 36 16 z', fill: '#8FADCE' }),
+    el('circle', { cx: 386, cy: 508, r: 10, fill: '#7B9CC0' }),
+    el('path', { d: 'M506 520 q 34 4 30 40', fill: 'none', stroke: '#7B9CC0', 'stroke-width': 8 }),
+  ]));
+
+  // small bushes and flowers up front
+  const front = deco();
+  front.append(bush(66, 522, .8, '#7CB066', '#93C57B'));
+  front.append(bush(880, 520, .9, '#7CB066', '#93C57B'));
+  [90, 300, 420, 600, 660, 760, 830].forEach((x, i) =>
+    front.append(flower(x, 574, ['#EF9C9C', '#FFD37E', '#C1A0E4'][i % 3], '#FFF3D1')));
+  front.append(daub(480, 596, 200, 10, '#6A9E5D', .35));
+  svg.append(front);
+
+  paperGrain(svg);
+  return svg;
+}
+
+/* ---------- chapter 2: market ---------- */
+function buildMarket(cats) {
+  const svg = sceneRoot();
+  svg.append(el('defs', {}, [
+    el('linearGradient', { id: 'skyM', x1: 0, y1: 0, x2: 0, y2: 1 }, [
+      el('stop', { offset: 0, 'stop-color': '#FFD096' }),
+      el('stop', { offset: .6, 'stop-color': '#FFE6BE' }),
+      el('stop', { offset: 1, 'stop-color': '#FFF3DC' }),
+    ])
+  ]));
+  svg.append(el('rect', { width: 960, height: 600, fill: 'url(#skyM)' }));
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    daub(120, 110, 48, 48, '#FFE3A4', .55),
+    daub(120, 110, 38, 38, '#FFD98E'),
+    cloud(560, 70, .8, '#FFF6E4'), cloud(820, 120, .6, '#FFFDF6')
+  ]));
+
+  // buildings — each facade gets a light edge and a shadow edge
+  const town = deco({ filter: 'url(#roughBig)' });
+  const bld = (x, w, h, c, roof) => {
+    const g = grp();
+    g.append(el('rect', { x, y: 440 - h, width: w, height: h, fill: c, rx: 4 }));
+    g.append(el('rect', { x: x + 4, y: 440 - h + 6, width: 13, height: h - 12, rx: 6, fill: tint(c, .3), opacity: .8 }));
+    g.append(el('rect', { x: x + w - 17, y: 440 - h + 6, width: 13, height: h - 12, rx: 6, fill: tint(c, -.18), opacity: .7 }));
+    g.append(el('path', { d: `M${x - 8} ${440 - h} h ${w + 16} l -14 -26 h ${-(w - 12)} z`, fill: roof }));
+    g.append(el('path', { d: `M${x - 8} ${440 - h} h ${w + 16} l -4 -8 h ${-(w + 8)} z`, fill: tint(roof, -.22), opacity: .8 }));
+    for (let r = 0; r < Math.floor(h / 70); r++)
+      for (let cix = 0; cix < Math.floor(w / 64); cix++) {
+        const wx = x + 20 + cix * 64, wy = 440 - h + 26 + r * 66;
+        g.append(el('rect', { x: wx, y: wy, width: 26, height: 30, rx: 6, fill: '#FFF0D2' }));
+        g.append(el('path', { d: `M${wx + 3} ${wy + 4} l 8 22`, stroke: '#FFE1A6', 'stroke-width': 4, opacity: .9 }));
+        g.append(el('rect', { x: wx, y: wy + 26, width: 26, height: 4, rx: 2, fill: tint(c, -.25), opacity: .7 }));
+      }
+    return g;
+  };
+  town.append(bld(40, 200, 300, '#EDB89E', '#C97D57'));
+  town.append(bld(280, 240, 250, '#B8D6BF', '#76A883'));
+  town.append(bld(560, 190, 320, '#ECD08F', '#C6A048'));
+  town.append(bld(780, 160, 230, '#C9B9E1', '#9179BE'));
+  svg.append(town);
+
+  // Latte peeks over the green roof ridge
+  placeCat(svg, cats[5], 428, 166, .55, 'peek', false);
+
+  // Mimi on a window sill, shutter overlaps her
+  placeCat(svg, cats[4], 636, 262, .55, 'sit', false);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('rect', { x: 600, y: 258, width: 78, height: 8, rx: 4, fill: '#C6A048' }),
+    el('rect', { x: 652, y: 186, width: 22, height: 76, rx: 4, fill: '#B08C3C' }),
+    el('line', { x1: 652, y1: 204, x2: 674, y2: 204, stroke: '#96762F', 'stroke-width': 3 }),
+    el('line', { x1: 652, y1: 222, x2: 674, y2: 222, stroke: '#96762F', 'stroke-width': 3 }),
+    el('line', { x1: 652, y1: 240, x2: 674, y2: 240, stroke: '#96762F', 'stroke-width': 3 }),
+  ]));
+
+  // bunting
+  const bunt = deco({ filter: 'url(#rough)' });
+  bunt.append(el('path', { d: 'M0 60 Q 480 140 960 50', fill: 'none', stroke: '#DCC094', 'stroke-width': 3 }));
+  for (let i = 0; i < 14; i++) {
+    const t = i / 13, x = t * 960, y = 60 + Math.sin(Math.PI * t) * 78 - 10 * (1 - Math.abs(.5 - t));
+    bunt.append(el('path', { d: `M${x - 10} ${y} h 20 l -10 18 z`, fill: ['#EF9C9C', '#FFD37E', '#9CC694', '#C1A0E4'][i % 4] }));
+  }
+  svg.append(bunt);
+
+  // cobbled ground with brush bands
+  svg.append(deco({ filter: 'url(#roughBig)' }, [
+    el('rect', { x: 0, y: 440, width: 960, height: 160, fill: '#E2CDA9' }),
+    el('rect', { x: 0, y: 440, width: 960, height: 10, fill: '#CDB48A' }),
+    daub(240, 520, 180, 15, '#F0E0C0', .5),
+    daub(700, 558, 220, 16, '#CBB086', .45),
+    daub(480, 594, 260, 12, '#BFA378', .4),
+  ]));
+
+  // left stall — Tofu under the table
+  const stallX = 90;
+  placeCat(svg, cats[3], stallX + 110, 560, .5, 'peek', false);
+  const stallL = deco({ filter: 'url(#rough)' });
+  stallL.append(el('rect', { x: stallX, y: 470, width: 12, height: 100, fill: '#9A7048' }));
+  stallL.append(el('rect', { x: stallX + 208, y: 470, width: 12, height: 100, fill: '#9A7048' }));
+  stallL.append(el('rect', { x: stallX - 10, y: 470, width: 240, height: 44, rx: 8, fill: '#B27E4F' }));
+  stallL.append(el('path', { d: `M${stallX - 4} 478 h 224`, stroke: '#D19A68', 'stroke-width': 5, opacity: .8 }));
+  stallL.append(
+    el('ellipse', { cx: stallX + 50, cy: 466, rx: 26, ry: 12, fill: '#E3AE74' }),
+    daub(stallX + 44, 460, 14, 6, '#F5D3A6', .9),
+    el('ellipse', { cx: stallX + 105, cy: 462, rx: 22, ry: 14, fill: '#CE8B50' }),
+    daub(stallX + 100, 455, 12, 6, '#E8B47E', .9),
+    el('path', { d: `M${stallX + 150} 470 q 14 -26 34 0 z`, fill: '#E3AE74' })
+  );
+  svg.append(stallL);
+
+  // Pudding loafs on the awning
+  placeCat(svg, cats[0], stallX + 118, 420, .55, 'loaf', true);
+  const awnL = deco({ filter: 'url(#rough)' });
+  awnL.append(el('rect', { x: stallX - 16, y: 402, width: 252, height: 14, rx: 7, fill: '#C97D57' }));
+  for (let i = 0; i < 6; i++)
+    awnL.append(el('path', { d: `M${stallX - 16 + i * 42} 414 h 42 q -8 22 -21 22 q -13 0 -21 -22 z`, fill: i % 2 ? '#FFF0D2' : '#EF9C9C' }));
+  awnL.append(el('path', { d: `M${stallX - 12} 408 h 244`, stroke: '#E5A57E', 'stroke-width': 4, opacity: .8 }));
+  svg.append(awnL);
+
+  // woven basket — Olive peeks out
+  placeCat(svg, cats[6], 330, 548, .6, 'peek', false);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('path', { d: 'M294 546 h 72 q 4 34 -12 42 h -48 q -16 -8 -12 -42 z', fill: '#C89561' }),
+    el('path', { d: 'M300 556 q 30 8 60 0 M298 570 q 32 8 64 0 M302 582 q 28 8 56 0', stroke: '#A87742', 'stroke-width': 4, fill: 'none', opacity: .8 }),
+    el('rect', { x: 288, y: 540, width: 84, height: 11, rx: 5, fill: '#B27E4F' }),
+  ]));
+
+  // barrel with Sesame peeking out
+  placeCat(svg, cats[1], 452, 500, .68, 'peek', false);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('path', { d: 'M414 498 q -8 44 8 78 h 60 q 16 -34 8 -78 z', fill: '#AF8156' }),
+    el('path', { d: 'M424 504 q -5 36 6 66', stroke: '#CDA173', 'stroke-width': 7, fill: 'none', opacity: .85 }),
+    el('path', { d: 'M482 504 q 5 36 -6 66', stroke: '#8A6440', 'stroke-width': 7, fill: 'none', opacity: .7 }),
+    el('rect', { x: 408, y: 492, width: 88, height: 12, rx: 6, fill: '#9A7048' }),
+    el('rect', { x: 412, y: 536, width: 80, height: 8, rx: 4, fill: '#82603E' }),
+  ]));
+
+  // crate stack hides Nori
+  placeCat(svg, cats[2], 610, 566, .82, 'sit', true);
+  const crates = deco({ filter: 'url(#rough)' });
+  const crate = (x, y, w, h) => grp({}, [
+    el('rect', { x, y, width: w, height: h, rx: 5, fill: '#DCAE79' }),
+    el('rect', { x: x + 3, y: y + 3, width: w - 6, height: 8, rx: 4, fill: '#F0CB9C', opacity: .9 }),
+    el('line', { x1: x + 6, y1: y + h / 2, x2: x + w - 6, y2: y + h / 2, stroke: '#B98A56', 'stroke-width': 4 }),
+    el('rect', { x, y: y + h - 7, width: w, height: 7, rx: 3, fill: '#B98A56', opacity: .8 }),
+  ]);
+  crates.append(crate(560, 520, 92, 58), crate(576, 470, 70, 48));
+  crates.append(
+    daub(596, 470, 9, 8, '#DE8181'), daub(614, 466, 9, 8, '#E48989'),
+    daub(630, 471, 9, 8, '#EDA35E'), daub(605, 476, 8, 7, '#C96F6F', .9)
+  );
+  svg.append(crates);
+
+  // right fish stall + lamppost
+  const stallR = deco({ filter: 'url(#rough)' });
+  stallR.append(el('rect', { x: 730, y: 470, width: 12, height: 100, fill: '#9A7048' }),
+    el('rect', { x: 900, y: 470, width: 12, height: 100, fill: '#9A7048' }),
+    el('rect', { x: 720, y: 470, width: 202, height: 42, rx: 8, fill: '#8FADCE' }),
+    el('path', { d: 'M728 478 h 186', stroke: '#B7CCE4', 'stroke-width': 5, opacity: .85 }));
+  stallR.append(el('path', { d: 'M760 460 q 16 -14 32 0 q -16 14 -32 0 z M792 460 l 12 -8 v 16 z', fill: '#7B9CC0' }));
+  stallR.append(el('path', { d: 'M820 462 q 14 -12 28 0 q -14 12 -28 0 z M848 462 l 10 -7 v 14 z', fill: '#AFC6DF' }));
+  stallR.append(el('rect', { x: 716, y: 404, width: 214, height: 13, rx: 6, fill: '#6E90B6' }));
+  for (let i = 0; i < 5; i++)
+    stallR.append(el('path', { d: `M${716 + i * 43} 415 h 43 q -8 20 -21.5 20 q -13.5 0 -21.5 -20 z`, fill: i % 2 ? '#FFF0D2' : '#8FADCE' }));
+  stallR.append(el('rect', { x: 694, y: 470, width: 8, height: 104, fill: '#5F587A' }),
+    daub(698, 462, 13, 13, '#FFD98E'),
+    daub(698, 458, 6, 5, '#FFF0C4', .9),
+    el('path', { d: 'M686 462 a12 12 0 0 1 24 0', fill: '#5F587A' }));
+  svg.append(stallR);
+
+  paperGrain(svg);
+  return svg;
+}
+
+/* ---------- chapter 3: rooftop ---------- */
+function buildRooftop(cats) {
+  const svg = sceneRoot();
+  svg.append(el('defs', {}, [
+    el('linearGradient', { id: 'skyN', x1: 0, y1: 0, x2: 0, y2: 1 }, [
+      el('stop', { offset: 0, 'stop-color': '#1E2544' }),
+      el('stop', { offset: .55, 'stop-color': '#33395E' }),
+      el('stop', { offset: 1, 'stop-color': '#4E5382' }),
+    ])
+  ]));
+  svg.append(el('rect', { width: 960, height: 600, fill: 'url(#skyN)' }));
+
+  // stars + painterly moon
+  const sky = deco();
+  for (let i = 0; i < 46; i++) {
+    const s = el('circle', { cx: rand(10, 950), cy: rand(10, 320), r: rand(1, 2.6), fill: '#FFF3D1' });
+    if (i % 3 === 0) { s.setAttribute('class', 'twinkle'); s.style.animationDelay = rand(0, 2.4) + 's'; }
+    sky.append(s);
+  }
+  const moon = deco({ filter: 'url(#rough)' });
+  moon.append(
+    daub(812, 104, 66, 66, '#FFEFC2', .22),
+    daub(812, 104, 54, 54, '#FFEFC2'),
+    daub(800, 92, 22, 18, '#FFF8DF', .8),
+    daub(794, 92, 9, 8, '#EAD79E', .8),
+    daub(828, 118, 6, 6, '#EAD79E', .8),
+    daub(818, 88, 4, 4, '#EAD79E', .7)
+  );
+  sky.append(moon);
+  sky.append(el('path', { d: 'M0 330 h60 v-40 h50 v40 h70 v-70 h60 v70 h90 v-30 h70 v30 h80 v-56 h64 v56 h96 v-34 h70 v34 h90 v-60 h60 v60 h100 v270 H0 Z', fill: '#2B3153', opacity: .85, filter: 'url(#roughBig)' }));
+  svg.append(sky);
+
+  // main rooftop planes with moonlit edges
+  svg.append(deco({ filter: 'url(#roughBig)' }, [
+    el('path', { d: 'M0 430 L 300 350 L 620 430 V 600 H 0 Z', fill: '#3A4166' }),
+    el('path', { d: 'M0 430 L 300 350 L 620 430 l 0 12 L 300 364 L 0 442 Z', fill: '#8A90BE', opacity: .5 }),
+    el('path', { d: 'M540 460 L 960 400 V 600 H 540 Z', fill: '#434A73' }),
+    el('path', { d: 'M540 460 L 960 400 l 0 11 L 540 472 Z', fill: '#8A90BE', opacity: .45 }),
+    el('rect', { x: 0, y: 500, width: 960, height: 100, fill: '#31375C' }),
+    daub(220, 560, 150, 16, '#262B4A', .5),
+    daub(640, 580, 180, 14, '#262B4A', .45),
+    daub(430, 400, 120, 12, '#4A5180', .5),
+  ]));
+
+  // Maple sits at the roof peak by the antenna
+  placeCat(svg, cats[3], 300, 352, .6, 'sit', false);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('line', { x1: 342, y1: 352, x2: 342, y2: 262, stroke: '#8E8AA6', 'stroke-width': 5, 'stroke-linecap': 'round' }),
+    el('line', { x1: 318, y1: 286, x2: 366, y2: 286, stroke: '#8E8AA6', 'stroke-width': 4, 'stroke-linecap': 'round' }),
+    el('line', { x1: 324, y1: 272, x2: 360, y2: 272, stroke: '#8E8AA6', 'stroke-width': 4, 'stroke-linecap': 'round' }),
+    daub(342, 260, 5, 5, '#FFD98E'),
+  ]));
+
+  // skylight — Ink peeks out of the opening
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('rect', { x: 350, y: 460, width: 88, height: 50, rx: 8, fill: '#242948' }),
+    el('rect', { x: 354, y: 464, width: 80, height: 8, rx: 4, fill: '#161A33', opacity: .8 }),
+  ]));
+  placeCat(svg, cats[8], 394, 506, .58, 'peek', false);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('rect', { x: 344, y: 504, width: 100, height: 12, rx: 6, fill: '#6E6788' }),
+    el('rect', { x: 348, y: 506, width: 92, height: 4, rx: 2, fill: '#9A93B4', opacity: .7 }),
+  ]));
+
+  // brick chimney hides Pepper; Cloud loafs on its cap
+  placeCat(svg, cats[2], 176, 462, .8, 'sit', true);
+  const chim1 = deco({ filter: 'url(#rough)' });
+  chim1.append(
+    el('rect', { x: 120, y: 400, width: 76, height: 96, rx: 6, fill: '#565078' }),
+    daub(138, 424, 12, 6, '#6B6590', .8), daub(172, 444, 13, 6, '#6B6590', .8),
+    daub(150, 470, 12, 6, '#443E62', .8), daub(178, 416, 11, 5, '#443E62', .7),
+    el('rect', { x: 112, y: 388, width: 92, height: 18, rx: 8, fill: '#6E6788' }),
+    el('rect', { x: 116, y: 390, width: 84, height: 5, rx: 2, fill: '#9A93B4', opacity: .7 })
+  );
+  svg.append(chim1);
+  placeCat(svg, cats[6], 158, 390, .5, 'loaf', false);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('path', { d: 'M186 382 q 6 -16 20 -12 q -2 14 -20 12 z', fill: '#9AA3C4', opacity: .45 }),
+  ]));
+
+  // Luna with her telescope beside the second chimney
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('line', { x1: 690, y1: 508, x2: 742, y2: 452, stroke: '#C7CDE3', 'stroke-width': 9, 'stroke-linecap': 'round' }),
+    el('line', { x1: 694, y1: 504, x2: 738, y2: 456, stroke: '#EDEFF9', 'stroke-width': 3, 'stroke-linecap': 'round', opacity: .8 }),
+    el('line', { x1: 700, y1: 512, x2: 678, y2: 548, stroke: '#8E8AA6', 'stroke-width': 6, 'stroke-linecap': 'round' }),
+    el('line', { x1: 700, y1: 512, x2: 724, y2: 548, stroke: '#8E8AA6', 'stroke-width': 6, 'stroke-linecap': 'round' }),
+  ]));
+  placeCat(svg, cats[0], 776, 548, .72, 'sit', true);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('rect', { x: 806, y: 470, width: 64, height: 92, rx: 6, fill: '#565078' }),
+    daub(824, 496, 11, 5, '#6B6590', .8), daub(850, 522, 11, 5, '#443E62', .8),
+    el('rect', { x: 798, y: 460, width: 80, height: 16, rx: 8, fill: '#6E6788' }),
+  ]));
+
+  // Ember peeks over the right roof edge
+  placeCat(svg, cats[7], 900, 409, .6, 'peek', false);
+
+  // water tower — Comet loafs on its ledge
+  const wt = deco({ filter: 'url(#rough)' });
+  wt.append(
+    el('line', { x1: 468, y1: 600, x2: 492, y2: 470, stroke: '#565078', 'stroke-width': 8 }),
+    el('line', { x1: 596, y1: 600, x2: 572, y2: 470, stroke: '#565078', 'stroke-width': 8 }),
+    el('path', { d: 'M470 372 h 124 l -8 96 h -108 z', fill: '#686186' }),
+    el('path', { d: 'M478 380 l 6 80', stroke: '#8B84A8', 'stroke-width': 8, opacity: .8 }),
+    el('path', { d: 'M584 380 l -6 80', stroke: '#4B4568', 'stroke-width': 8, opacity: .7 }),
+    el('path', { d: 'M462 372 h 140 l -70 -34 z', fill: '#524C70' }),
+    el('path', { d: 'M470 368 l 62 -28', stroke: '#7B749A', 'stroke-width': 4, opacity: .7 }),
+    el('rect', { x: 458, y: 466, width: 148, height: 12, rx: 6, fill: '#524C70' })
+  );
+  svg.append(wt);
+  placeCat(svg, cats[1], 532, 468, .5, 'loaf', false);
+
+  // laundry line — Yuki peeks over a hanging sheet
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('path', { d: 'M620 486 Q 770 512 930 470', fill: 'none', stroke: '#C7CDE3', 'stroke-width': 3 })
+  ]));
+  placeCat(svg, cats[4], 668, 512, .56, 'peek', false);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('path', { d: 'M636 498 q 34 8 66 4 l -4 66 q -30 8 -58 -2 z', fill: '#D6DDF1', opacity: .97 }),
+    el('path', { d: 'M646 508 q 2 24 -2 46', stroke: '#EDF0FA', 'stroke-width': 6, opacity: .8, fill: 'none' }),
+    el('path', { d: 'M760 506 q 26 4 48 -2 l -3 48 q -22 8 -42 0 z', fill: '#EFBCBC', opacity: .97 }),
+    el('path', { d: 'M770 514 q 2 18 -1 34', stroke: '#F8D6D6', 'stroke-width': 5, opacity: .85, fill: 'none' }),
+    el('circle', { cx: 668, cy: 500, r: 3, fill: '#8E8AA6' }),
+    el('circle', { cx: 784, cy: 505, r: 3, fill: '#8E8AA6' })
+  ]));
+
+  // wooden crate hides Ash
+  placeCat(svg, cats[5], 100, 592, .7, 'sit', true);
+  svg.append(deco({ filter: 'url(#rough)' }, [
+    el('rect', { x: 62, y: 542, width: 80, height: 54, rx: 6, fill: '#5F587E' }),
+    el('rect', { x: 66, y: 546, width: 72, height: 8, rx: 4, fill: '#7B749A', opacity: .85 }),
+    el('line', { x1: 68, y1: 570, x2: 136, y2: 570, stroke: '#443E62', 'stroke-width': 4 }),
+  ]));
+
+  // potted plant + string lights foreground
+  const fg = deco({ filter: 'url(#rough)' });
+  fg.append(el('path', { d: 'M868 546 h 52 l -8 44 h -36 z', fill: '#AF8156' }));
+  fg.append(el('path', { d: 'M876 552 l 5 32', stroke: '#CDA173', 'stroke-width': 5, opacity: .8 }));
+  fg.append(el('path', { d: 'M894 546 q -26 -30 -4 -52 q 20 20 4 52 z M894 546 q 26 -26 10 -50 q -22 14 -10 50 z', fill: '#6E9C5C' }));
+  fg.append(el('path', { d: 'M0 560 Q 480 610 960 556', fill: 'none', stroke: '#C7CDE3', 'stroke-width': 2, opacity: .7 }));
+  for (let i = 1; i < 12; i++) {
+    const t = i / 12, x = t * 960, y = 560 + Math.sin(Math.PI * t) * 44;
+    const b = el('circle', { cx: x, cy: y + 8, r: 5, fill: ['#FFD98E', '#F2A9A9', '#A9CFA0'][i % 3], class: 'twinkle' });
+    b.style.animationDelay = (i * .3) + 's';
+    fg.append(b);
+  }
+  svg.append(fg);
+
+  paperGrain(svg);
+  return svg;
+}
+
+/* =========================================================
+   stickers (rewards)
+========================================================= */
+function stickerSVG(kind) {
+  const g = grp();
+  const badge = el('circle', { cx: 60, cy: 60, r: 54, fill: '#FFF6DF', stroke: '#FFD98E', 'stroke-width': 6 });
+  g.append(badge);
+  if (kind === 'sunflower') {
+    for (let i = 0; i < 12; i++) {
+      const a = i / 12 * Math.PI * 2;
+      g.append(el('ellipse', { cx: 60 + Math.cos(a) * 26, cy: 60 + Math.sin(a) * 26, rx: 11, ry: 6, transform: `rotate(${a * 180 / Math.PI} ${60 + Math.cos(a) * 26} ${60 + Math.sin(a) * 26})`, fill: '#FFC85E' }));
+    }
+    g.append(el('circle', { cx: 60, cy: 60, r: 16, fill: '#A97C50' }));
+    g.append(el('circle', { cx: 55, cy: 55, r: 4, fill: '#C08A5E' }));
+  } else if (kind === 'bread') {
+    g.append(el('path', { d: 'M30 72 q -4 -26 30 -26 q 34 0 30 26 q -2 12 -30 12 q -28 0 -30 -12 z', fill: '#E8B87F' }));
+    g.append(el('path', { d: 'M46 52 q 2 10 -2 18 M60 50 q 2 12 0 20 M74 52 q -2 10 2 18', stroke: '#C89561', 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }));
+    g.append(el('circle', { cx: 42, cy: 40, r: 3, fill: '#F2A9A9' }), el('circle', { cx: 78, cy: 40, r: 3, fill: '#F2A9A9' }));
+  } else { // star
+    g.append(el('path', { d: 'M60 26 L70 50 L96 52 L76 69 L82 95 L60 81 L38 95 L44 69 L24 52 L50 50 Z', fill: '#FFD98E', stroke: '#F2C14E', 'stroke-width': 3, 'stroke-linejoin': 'round' }));
+    g.append(el('path', { d: 'M52 58 q 3 -5 6 0 M66 58 q 3 -5 6 0', stroke: '#A97C50', 'stroke-width': 3, fill: 'none', 'stroke-linecap': 'round' }));
+    g.append(el('path', { d: 'M58 66 q 4 4 8 0', stroke: '#A97C50', 'stroke-width': 3, fill: 'none', 'stroke-linecap': 'round' }));
+  }
+  return g;
+}
+
+/* =========================================================
+   audio — Web Audio API
+========================================================= */
+let AC = null, master = null, bgmGain = null, sfxGain = null, muted = false, bgmTimer = null;
+
+function initAudio() {
+  if (AC) return;
+  AC = new (window.AudioContext || window.webkitAudioContext)();
+  master = AC.createGain(); master.gain.value = .9; master.connect(AC.destination);
+  bgmGain = AC.createGain(); bgmGain.gain.value = .5; bgmGain.connect(master);
+  sfxGain = AC.createGain(); sfxGain.gain.value = .9; sfxGain.connect(master);
+  startBGM();
+}
+
+function pluck(freq, t, dur, vol, dest, type = 'triangle') {
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t + .02);
+  g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g); g.connect(dest);
+  o.start(t); o.stop(t + dur + .05);
+}
+
+function pad(freqs, t, dur, vol) {
+  freqs.forEach(f => {
+    const o = AC.createOscillator(), g = AC.createGain(), lp = AC.createBiquadFilter();
+    o.type = 'sine'; o.frequency.value = f;
+    lp.type = 'lowpass'; lp.frequency.value = 900;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + dur * .3);
+    g.gain.linearRampToValueAtTime(0, t + dur);
+    o.connect(lp); lp.connect(g); g.connect(bgmGain);
+    o.start(t); o.stop(t + dur + .1);
+  });
+}
+
+/* gentle two-bar loop: Cmaj7 / Am7 / Fmaj7 / G6 */
+const CHORDS = [
+  [261.63, 329.63, 392.00, 493.88],
+  [220.00, 261.63, 329.63, 392.00],
+  [174.61, 220.00, 261.63, 349.23],
+  [196.00, 246.94, 293.66, 329.63],
+];
+let barIdx = 0;
+function scheduleBar() {
+  const beat = 60 / 68;           // slow & breezy
+  const barDur = beat * 4;
+  const t = AC.currentTime + .08;
+  const ch = CHORDS[barIdx % CHORDS.length];
+  pad(ch.slice(0, 3).map(f => f / 2), t, barDur, .028);
+  // plucked arpeggio, skips a note now and then like a lazy afternoon
+  const pattern = [0, 1, 2, 3, 2, 1, 3, 2];
+  pattern.forEach((idx, i) => {
+    if (Math.random() < .18) return;
+    pluck(ch[idx] * 2, t + i * beat / 2, .5, .045, bgmGain);
+  });
+  if (Math.random() < .4) pluck(ch[3] * 4, t + beat * rand(1, 3), .8, .02, bgmGain, 'sine');
+  barIdx++;
+  bgmTimer = setTimeout(scheduleBar, barDur * 1000 - 60);
+}
+function startBGM() { if (!bgmTimer) scheduleBar(); }
+
+/* sfx */
+function sfxClick() {
+  if (!AC || muted) return;
+  const t = AC.currentTime;
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(620, t);
+  o.frequency.exponentialRampToValueAtTime(240, t + .09);
+  g.gain.setValueAtTime(.15, t);
+  g.gain.exponentialRampToValueAtTime(.0001, t + .1);
+  o.connect(g); g.connect(sfxGain); o.start(t); o.stop(t + .12);
+}
+function sfxChime() {
+  if (!AC || muted) return;
+  const t = AC.currentTime;
+  [659.25, 783.99, 1046.5].forEach((f, i) => pluck(f, t + i * .09, .7, .12, sfxGain, 'triangle'));
+}
+function sfxMeow(base) {
+  if (!AC || muted) return;
+  const t = AC.currentTime + .12;
+  const o = AC.createOscillator(), g = AC.createGain(), lp = AC.createBiquadFilter();
+  const vib = AC.createOscillator(), vg = AC.createGain();
+  o.type = 'sawtooth';
+  lp.type = 'lowpass'; lp.frequency.value = 1400; lp.Q.value = 2;
+  vib.frequency.value = 7; vg.gain.value = base * .03;
+  vib.connect(vg); vg.connect(o.frequency);
+  // mee — ow
+  o.frequency.setValueAtTime(base * .8, t);
+  o.frequency.linearRampToValueAtTime(base * 1.5, t + .16);
+  o.frequency.linearRampToValueAtTime(base * .65, t + .5);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(.14, t + .06);
+  g.gain.setValueAtTime(.12, t + .3);
+  g.gain.exponentialRampToValueAtTime(.0001, t + .55);
+  o.connect(lp); lp.connect(g); g.connect(sfxGain);
+  o.start(t); vib.start(t);
+  o.stop(t + .6); vib.stop(t + .6);
+}
+function sfxFanfare() {
+  if (!AC || muted) return;
+  const t = AC.currentTime;
+  [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => pluck(f, t + i * .11, .9, .11, sfxGain));
+}
+let noiseBuf = null;
+function sfxPage() {
+  if (!AC || muted) return;
+  if (!noiseBuf) {
+    noiseBuf = AC.createBuffer(1, AC.sampleRate * .4, AC.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+  const t = AC.currentTime;
+  const src = AC.createBufferSource(); src.buffer = noiseBuf;
+  const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 1.1;
+  bp.frequency.setValueAtTime(420, t);
+  bp.frequency.exponentialRampToValueAtTime(1900, t + .22);
+  const g = AC.createGain();
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(.09, t + .05);
+  g.gain.exponentialRampToValueAtTime(.0001, t + .32);
+  src.connect(bp); bp.connect(g); g.connect(sfxGain);
+  src.start(t); src.stop(t + .4);
+}
+
+/* =========================================================
+   game state & flow
+========================================================= */
+let chapterIdx = 0;
+let found = new Set();
+const earned = [];
+
+const sceneHolder = $('#sceneHolder');
+const fx = $('#fx');
+const stage = $('#stage');
+
+/* ---------- pan & zoom viewport ---------- */
+let sceneSvg = null;
+let view = { x: 0, y: 0, w: 960, h: 600 };
+const MIN_W = 300; // max ~3.2x zoom
+
+function applyView() {
+  if (sceneSvg) sceneSvg.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`);
+}
+function clampView() {
+  view.w = Math.max(MIN_W, Math.min(960, view.w));
+  view.h = view.w * 600 / 960;
+  view.x = Math.max(0, Math.min(960 - view.w, view.x));
+  view.y = Math.max(0, Math.min(600 - view.h, view.y));
+}
+function worldPoint(clientX, clientY) {
+  const r = sceneSvg.getBoundingClientRect();
+  return [view.x + (clientX - r.left) / r.width * view.w,
+          view.y + (clientY - r.top) / r.height * view.h];
+}
+function zoomAt(f, wx, wy) {
+  view.x = wx - (wx - view.x) / f;
+  view.y = wy - (wy - view.y) / f;
+  view.w = view.w / f;
+  clampView(); applyView();
+}
+function resetView() { view = { x: 0, y: 0, w: 960, h: 600 }; applyView(); }
+
+const pointers = new Map();
+let gesture = null;
+
+stage.addEventListener('pointerdown', e => {
+  initAudio();
+  if (e.target.closest('#zoomCtrl') || !sceneSvg) return;
+  try { stage.setPointerCapture && stage.setPointerCapture(e.pointerId); } catch (err) {}
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 1) {
+    gesture = { sx: e.clientX, sy: e.clientY, vx: view.x, vy: view.y, target: e.target, moved: false };
+  } else if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    gesture = { pinch: Math.hypot(a.x - b.x, a.y - b.y) };
+  }
+});
+stage.addEventListener('pointermove', e => {
+  if (!pointers.has(e.pointerId) || !sceneSvg || !gesture) return;
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 1 && gesture.pinch === undefined) {
+    const r = sceneSvg.getBoundingClientRect();
+    if (Math.hypot(e.clientX - gesture.sx, e.clientY - gesture.sy) > 7) gesture.moved = true;
+    view.x = gesture.vx - (e.clientX - gesture.sx) / r.width * view.w;
+    view.y = gesture.vy - (e.clientY - gesture.sy) / r.height * view.h;
+    clampView(); applyView();
+  } else if (pointers.size === 2 && gesture.pinch) {
+    const [a, b] = [...pointers.values()];
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (d > 0 && gesture.pinch > 0) {
+      const [wx, wy] = worldPoint((a.x + b.x) / 2, (a.y + b.y) / 2);
+      zoomAt(d / gesture.pinch, wx, wy);
+    }
+    gesture.pinch = d;
+  }
+});
+function endPointer(e) {
+  const wasSingle = pointers.size === 1;
+  pointers.delete(e.pointerId);
+  if (wasSingle && gesture && gesture.pinch === undefined) {
+    if (!gesture.moved && gesture.target) handleTap(gesture.target, e);
+    gesture = null;
+  } else if (pointers.size === 1) {
+    const rest = [...pointers.values()][0];
+    gesture = { sx: rest.x, sy: rest.y, vx: view.x, vy: view.y, target: null, moved: true };
+  } else if (pointers.size === 0) {
+    gesture = null;
+  }
+}
+stage.addEventListener('pointerup', endPointer);
+stage.addEventListener('pointercancel', endPointer);
+
+stage.addEventListener('wheel', e => {
+  if (!sceneSvg) return;
+  e.preventDefault();
+  const [wx, wy] = worldPoint(e.clientX, e.clientY);
+  zoomAt(e.deltaY < 0 ? 1.15 : 1 / 1.15, wx, wy);
+}, { passive: false });
+
+$('#zin').addEventListener('click', () => { initAudio(); sfxClick(); zoomAt(1.35, view.x + view.w / 2, view.y + view.h / 2); });
+$('#zout').addEventListener('click', () => { initAudio(); sfxClick(); zoomAt(1 / 1.35, view.x + view.w / 2, view.y + view.h / 2); });
+$('#zreset').addEventListener('click', () => { initAudio(); sfxClick(); resetView(); });
+
+function handleTap(target, e) {
+  const catG = target.closest ? target.closest('.cat') : null;
+  if (catG && !found.has(catG.dataset.id)) onFound(catG, e);
+  else sfxClick();
+}
+
+function loadChapter(i) {
+  chapterIdx = i;
+  found = new Set();
+  const ch = CHAPTERS[i];
+  $('#chName').textContent = ch.name;
+  $('.num').textContent = '第 ' + (i + 1) + ' 章';
+  updateCounter();
+
+  // portraits
+  const pr = $('#portraits');
+  pr.innerHTML = '';
+  ch.cats.forEach(c => pr.append(buildChip(c, false)));
+
+  // scene
+  sceneHolder.innerHTML = '';
+  const svg = ch.build(ch.cats);
+  sceneHolder.append(svg);
+  sceneSvg = svg;
+  resetView();
+}
+
+function updateCounter() {
+  $('#counter').textContent = `已找到 ${found.size} / ${CHAPTERS[chapterIdx].cats.length} 位朋友`;
+}
+
+function onFound(catG, e) {
+  const ch = CHAPTERS[chapterIdx];
+  const cat = ch.cats.find(c => c.id === catG.dataset.id);
+  found.add(cat.id);
+  catG.classList.add('found');
+  // portrait chip reveal — rebuild the whole chip node (robust across browsers)
+  revealChip(cat);
+  sfxChime();
+  sfxMeow(cat.meow);
+  spawnHearts(e);
+  updateCounter();
+
+  // toast
+  $('#toastName').textContent = cat.name + ',找到啦!';
+  $('#toastRel').textContent = cat.rel;
+  const tf = $('#toastFace');
+  tf.innerHTML = '';
+  tf.append(miniHead(cat.pal, false));
+  const toast = $('#toast');
+  toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => toast.classList.remove('show'), 4200);
+
+  if (found.size === ch.cats.length) {
+    setTimeout(showReward, 1300);
+  }
+}
+
+/* build a fresh chip element (found or silhouette) */
+function buildChip(cat, isFound) {
+  const chip = document.createElement('div');
+  chip.className = 'chip' + (isFound ? ' found' : '');
+  chip.dataset.id = cat.id;
+  const s = el('svg', { viewBox: '0 0 100 84' });
+  s.append(miniHead(cat.pal, !isFound));
+  chip.append(s);
+  const nm = document.createElement('span');
+  nm.className = 'nm';
+  nm.textContent = isFound ? cat.name : '???';
+  chip.append(nm);
+  return chip;
+}
+function revealChip(cat) {
+  const old = document.querySelector(`.chip[data-id="${cat.id}"]`);
+  if (!old) return;
+  const fresh = buildChip(cat, true);
+  fresh.classList.add('pop');
+  old.replaceWith(fresh);
+}
+
+function spawnHearts(e) {
+  const rect = $('#stage').getBoundingClientRect();
+  const x = e.clientX - rect.left, y = e.clientY - rect.top;
+  const glyphs = ['♥', '♥', '✦', '♥', '✧', '♥'];
+  for (let i = 0; i < 6; i++) {
+    const h = document.createElement('span');
+    h.className = 'heart';
+    h.textContent = glyphs[i];
+    h.style.left = (x + rand(-14, 14)) + 'px';
+    h.style.top = (y + rand(-10, 6)) + 'px';
+    h.style.setProperty('--dx', rand(-46, 46) + 'px');
+    h.style.setProperty('--rot', rand(-30, 30) + 'deg');
+    h.style.color = i % 2 ? '#E48989' : '#FFC85E';
+    h.style.fontSize = rand(15, 26) + 'px';
+    fx.append(h);
+    setTimeout(() => h.remove(), 1300);
+  }
+}
+
+function showReward() {
+  const ch = CHAPTERS[chapterIdx];
+  sfxFanfare();
+  earned.push(ch.sticker);
+  $('#rewardSticker').replaceChildren(stickerSVG(ch.sticker));
+  const last = chapterIdx === CHAPTERS.length - 1;
+  $('#rewardTitle').textContent = last ? '所有猫猫都找到了!' : ch.name + ' · 完成!';
+  $('#rewardText').textContent = ch.rewardText;
+  $('#nextBtn').textContent = last ? '翻开立体绘本 📖' : '下一章 →';
+  $('#rewardModal').classList.add('show');
+}
+
+$('#nextBtn').addEventListener('click', () => {
+  sfxClick();
+  $('#rewardModal').classList.remove('show');
+  if (chapterIdx < CHAPTERS.length - 1) {
+    loadChapter(chapterIdx + 1);
+  } else {
+    openStorybook();
+  }
+});
+
+/* album */
+function openAlbum(finale) {
+  const grid = $('#albumGrid');
+  grid.innerHTML = '';
+  CHAPTERS.forEach(ch => {
+    const has = earned.includes(ch.sticker);
+    const slot = document.createElement('div');
+    slot.className = 'slot ' + (has ? 'earned' : 'empty');
+    const s = el('svg', { viewBox: '0 0 120 120' });
+    s.append(stickerSVG(ch.sticker));
+    slot.append(s);
+    const nm = document.createElement('span');
+    nm.className = 'sn';
+    nm.textContent = has ? ch.stickerName : '? ? ?';
+    slot.append(nm);
+    grid.append(slot);
+  });
+  $('#albumClose').textContent = finale ? '从花园重新开始' : '继续寻找';
+  $('#albumModal').classList.add('show');
+  $('#albumClose').onclick = () => {
+    sfxClick();
+    $('#albumModal').classList.remove('show');
+    if (finale) { earned.length = 0; loadChapter(0); }
+  };
+}
+$('#albumBtn').addEventListener('click', () => { initAudio(); sfxClick(); openAlbum(false); });
+
+/* =========================================================
+   pop-up storybook (finale)
+========================================================= */
+function makeHappy(s) {
+  s.querySelectorAll('.eyesOpen').forEach(n => n.style.display = 'none');
+  s.querySelectorAll('.eyesHappy').forEach(n => n.style.display = 'block');
+  s.querySelectorAll('.blush').forEach(n => n.style.opacity = 1);
+}
+function popCat(pal, pose = 'sit', flip = false, happy = true) {
+  const vbs = { sit: '-60 -102 120 108', loaf: '-70 -66 116 72', peek: '-42 -66 84 72' };
+  const s = el('svg', { viewBox: vbs[pose] });
+  const g = grp({ transform: flip ? 'scale(-1 1)' : '' });
+  g.append(POSES[pose](pal));
+  s.append(g);
+  if (happy) makeHappy(s);
+  return s;
+}
+function popSun() {
+  const s = el('svg', { viewBox: '0 0 120 120' });
+  for (let i = 0; i < 8; i++) {
+    const a = i / 8 * Math.PI * 2 + .3;
+    s.append(el('line', { x1: 60 + Math.cos(a) * 44, y1: 60 + Math.sin(a) * 44, x2: 60 + Math.cos(a) * 56, y2: 60 + Math.sin(a) * 56, stroke: '#FFD98E', 'stroke-width': 7, 'stroke-linecap': 'round' }));
+  }
+  s.append(daub(60, 60, 38, 38, '#FFD98E'), daub(52, 52, 15, 12, '#FFF3CE', .85));
+  return s;
+}
+function popTree() {
+  const s = el('svg', { viewBox: '0 0 170 210' });
+  s.append(el('path', { d: 'M78 205 Q 72 130 78 78 Q 80 66 92 68 Q 98 130 96 205 Z', fill: '#9A7048' }));
+  s.append(daub(70, 70, 44, 38, '#7CB066'), daub(118, 56, 40, 34, '#93C57B'),
+           daub(92, 96, 38, 30, '#89BD73'), daub(84, 42, 30, 22, '#B5DA98', .9));
+  return s;
+}
+function popBushArt() {
+  const s = el('svg', { viewBox: '0 0 170 100' });
+  s.append(daub(85, 66, 62, 30, '#659A52'), daub(52, 52, 40, 26, '#7CB066'),
+           daub(118, 52, 40, 26, '#93C57B'), daub(85, 38, 32, 18, '#B5DA98', .9),
+           el('circle', { cx: 66, cy: 40, r: 4.5, fill: '#F2A9A9' }),
+           el('circle', { cx: 106, cy: 48, r: 4.5, fill: '#F2A9A9' }));
+  return s;
+}
+function popStallArt() {
+  const s = el('svg', { viewBox: '0 0 210 160' });
+  s.append(
+    el('rect', { x: 28, y: 66, width: 10, height: 90, fill: '#9A7048' }),
+    el('rect', { x: 172, y: 66, width: 10, height: 90, fill: '#9A7048' }),
+    el('rect', { x: 18, y: 62, width: 174, height: 34, rx: 8, fill: '#B27E4F' }),
+    el('ellipse', { cx: 70, cy: 58, rx: 24, ry: 11, fill: '#E3AE74' }),
+    el('ellipse', { cx: 122, cy: 55, rx: 20, ry: 12, fill: '#CE8B50' }),
+    daub(66, 52, 12, 5, '#F5D3A6', .9),
+    el('rect', { x: 10, y: 12, width: 190, height: 12, rx: 6, fill: '#C97D57' })
+  );
+  for (let i = 0; i < 5; i++)
+    s.append(el('path', { d: `M${10 + i * 38} 22 h 38 q -7 20 -19 20 q -12 0 -19 -20 z`, fill: i % 2 ? '#FFF0D2' : '#EF9C9C' }));
+  return s;
+}
+function popMoonArt() {
+  const s = el('svg', { viewBox: '0 0 130 130' });
+  s.append(daub(65, 65, 58, 58, '#FFEFC2', .25), daub(65, 65, 46, 46, '#FFEFC2'),
+           daub(54, 54, 18, 15, '#FFF8DF', .85), daub(50, 52, 8, 7, '#EAD79E', .8),
+           daub(80, 78, 6, 6, '#EAD79E', .8));
+  return s;
+}
+function popChimneyArt() {
+  const s = el('svg', { viewBox: '0 0 110 150' });
+  s.append(
+    el('rect', { x: 20, y: 24, width: 70, height: 122, rx: 6, fill: '#565078' }),
+    daub(40, 60, 12, 6, '#6B6590', .85), daub(70, 90, 12, 6, '#443E62', .85),
+    daub(52, 118, 12, 6, '#6B6590', .8),
+    el('rect', { x: 12, y: 12, width: 86, height: 18, rx: 8, fill: '#6E6788' }),
+    el('rect', { x: 16, y: 14, width: 78, height: 5, rx: 2, fill: '#9A93B4', opacity: .7 })
+  );
+  return s;
+}
+function popStarsArt() {
+  const s = el('svg', { viewBox: '0 0 200 90' });
+  for (let i = 0; i < 14; i++) {
+    const c = el('circle', { cx: rand(8, 192), cy: rand(8, 82), r: rand(1.5, 3.4), fill: '#FFF3D1', class: 'twinkle' });
+    c.style.animationDelay = rand(0, 2.4) + 's';
+    s.append(c);
+  }
+  return s;
+}
+
+function storyPages() {
+  const P = PALS;
+  const L = (node, left, bottom, width, delay) => ({ node, left, bottom, width, delay });
+  return [
+    {
+      title: '猫猫捉迷藏', text: '—— 二十一位朋友的小小绘本 · 献给最会找猫的你 ——',
+      bg: 'linear-gradient(180deg,#FDEFD2,#FBE0BE)',
+      layers: [
+        L(popSun(), '70%', '48%', '24%', .1),
+        L(popCat(P.cream, 'sit'), '16%', '2%', '32%', .3),
+        L(popCat(P.orange, 'sit', true), '50%', '2%', '26%', .5),
+      ]
+    },
+    {
+      title: '第一页 · 阳光花园', text: '阳光花园里,麻糬姐姐总能找到最暖和的地方打盹,弟弟味噌学着她的样子,把尾巴卷成一模一样的弧度。饼干爷爷眯着眼睛,慢悠悠地说:『真像我年轻的时候呀。』',
+      bg: 'linear-gradient(180deg,#CFE8EF,#E9F3D5)',
+      layers: [
+        L(popTree(), '2%', '6%', '30%', .1),
+        L(popCat(P.cream, 'loaf'), '30%', '4%', '26%', .35),
+        L(popCat(P.orange, 'loaf'), '54%', '2%', '20%', .55),
+        L(popCat(P.brown, 'sit', true), '76%', '2%', '22%', .75),
+      ]
+    },
+    {
+      title: '第二页 · 三叶与波比', text: '害羞的三叶只想安安静静地照顾花草,勇敢的波比却总拉着她去篱笆那头冒险。不过没关系——不管跑到哪里,波比都会回过头来,等她慢慢跟上。',
+      bg: 'linear-gradient(180deg,#DFF0DA,#F6F1D8)',
+      layers: [
+        L(popBushArt(), '4%', '4%', '34%', .1),
+        L(popCat(P.gray, 'sit'), '38%', '2%', '24%', .35),
+        L(popCat(P.rose, 'sit', true), '60%', '2%', '24%', .55),
+        L(popBushArt(), '78%', '6%', '22%', .7),
+      ]
+    },
+    {
+      title: '第三页 · 温馨市集', text: '市集上,布丁烤的面包香气能飘过三条街,芝麻在暖洋洋的摊位上负责打盹,橄榄把鱼摊擦得发亮,小豆腐练习板起脸。咪咪跑来跑去,忙着告诉每一只猫:今天来了一位很会找猫的朋友!',
+      bg: 'linear-gradient(180deg,#FFE6BE,#F8E3C2)',
+      layers: [
+        L(popStallArt(), '4%', '4%', '42%', .1),
+        L(popCat(P.butter, 'loaf'), '46%', '2%', '24%', .4),
+        L(popCat(P.black, 'peek'), '66%', '4%', '18%', .6),
+        L(popCat(P.white, 'peek'), '82%', '2%', '14%', .78),
+      ]
+    },
+    {
+      title: '第四页 · 星空屋顶', text: '夜里,露娜用饼干爷爷教的方法一颗一颗数星星;彗星和云朵在屋脊上赛跑;焰儿看着枫糖跃过烟囱,轻声说:『落地要软软的哦。』墨墨躲在天窗后面,和小雪一起听风走过的声音。',
+      bg: 'linear-gradient(180deg,#232B4A,#4A5182)',
+      layers: [
+        L(popStarsArt(), '4%', '58%', '50%', .05),
+        L(popMoonArt(), '72%', '52%', '22%', .15),
+        L(popChimneyArt(), '6%', '2%', '18%', .3),
+        L(popCat(P.bluegray, 'sit', true), '28%', '2%', '22%', .5),
+        L(popCat(P.snow, 'loaf'), '52%', '2%', '22%', .68),
+        L(popCat(P.ink, 'peek'), '76%', '2%', '16%', .85),
+      ]
+    },
+    {
+      title: '尾声 · 晚安,喵', text: '二十一只猫,住在同一片小小的天空下:花园的、市集的、屋顶的,彼此都是家人和朋友。谢谢你,把每一位朋友都找了出来。晚安,喵。',
+      bg: 'linear-gradient(180deg,#FFEDEA,#FFF7EC)',
+      last: true,
+      layers: [
+        L(popCat(P.cream, 'sit'), '4%', '2%', '20%', .1),
+        L(popCat(P.butter, 'sit', true), '22%', '2%', '19%', .28),
+        L(popCat(P.bluegray, 'sit'), '40%', '2%', '20%', .46),
+        L(popCat(P.orange, 'sit', true), '59%', '2%', '18%', .64),
+        L(popCat(P.snow, 'sit'), '77%', '2%', '19%', .82),
+      ]
+    },
+  ];
+}
+
+let bookPages = [], bookIdx = 0, bookBuilt = false;
+
+function buildBook() {
+  const book = $('#book');
+  book.innerHTML = '';
+  const dots = $('#dots');
+  dots.innerHTML = '';
+  bookPages = storyPages().map(pg => {
+    const page = document.createElement('div');
+    page.className = 'page';
+    const sc = document.createElement('div');
+    sc.className = 'scene3d';
+    sc.style.background = pg.bg;
+    pg.layers.forEach(Ld => {
+      const d = document.createElement('div');
+      d.className = 'bkpop';
+      d.style.left = Ld.left; d.style.bottom = Ld.bottom; d.style.width = Ld.width;
+      d.style.transitionDelay = `${Ld.delay}s, ${Ld.delay}s`;
+      d.append(Ld.node);
+      sc.append(d);
+    });
+    page.append(sc);
+    const pt = document.createElement('div');
+    pt.className = 'ptext';
+    pt.innerHTML = `<h3>${pg.title}</h3><p>${pg.text}</p>`;
+    if (pg.last) {
+      const bt = document.createElement('div');
+      bt.className = 'pbtns';
+      const b1 = document.createElement('button');
+      b1.className = 'big-btn'; b1.textContent = '查看贴纸册 ✨';
+      b1.addEventListener('click', () => {
+        sfxClick();
+        $('#storyModal').classList.remove('show');
+        openAlbum(true);
+      });
+      const b2 = document.createElement('button');
+      b2.className = 'pill-btn'; b2.textContent = '再玩一次';
+      b2.addEventListener('click', () => {
+        sfxClick();
+        $('#storyModal').classList.remove('show');
+        earned.length = 0;
+        loadChapter(0);
+      });
+      bt.append(b1, b2);
+      pt.append(bt);
+    }
+    page.append(pt);
+    book.append(page);
+    dots.append(document.createElement('i'));
+    return page;
+  });
+}
+
+function showBookPage(n) {
+  bookIdx = Math.max(0, Math.min(bookPages.length - 1, n));
+  bookPages.forEach((p, i) => {
+    p.classList.toggle('past', i < bookIdx);
+    p.classList.toggle('current', i === bookIdx);
+    p.style.zIndex = i < bookIdx ? 60 + i : 40 - i;
+  });
+  [...$('#dots').children].forEach((d, i) => d.classList.toggle('on', i === bookIdx));
+  $('#pgPrev').style.visibility = bookIdx === 0 ? 'hidden' : 'visible';
+  $('#pgNext').style.visibility = bookIdx === bookPages.length - 1 ? 'hidden' : 'visible';
+}
+
+function openStorybook() {
+  if (!bookBuilt) { buildBook(); bookBuilt = true; }
+  $('#storyModal').classList.add('show');
+  bookPages.forEach(p => p.classList.remove('current', 'past'));
+  requestAnimationFrame(() => requestAnimationFrame(() => showBookPage(0)));
+  sfxPage();
+}
+$('#pgNext').addEventListener('click', () => { sfxPage(); showBookPage(bookIdx + 1); });
+$('#pgPrev').addEventListener('click', () => { sfxPage(); showBookPage(bookIdx - 1); });
+
+/* hint */
+$('#hintBtn').addEventListener('click', () => {
+  initAudio(); sfxClick();
+  const ch = CHAPTERS[chapterIdx];
+  const hidden = ch.cats.filter(c => !found.has(c.id));
+  if (!hidden.length) return;
+  const pick = hidden[Math.floor(Math.random() * hidden.length)];
+  const g = document.querySelector(`.cat[data-id="${pick.id}"]`);
+  if (g) {
+    g.classList.remove('wiggle');
+    void g.getBoundingClientRect();
+    g.classList.add('wiggle');
+    setTimeout(() => g.classList.remove('wiggle'), 800);
+    sfxMeow(pick.meow); // a helpful little mew from somewhere…
+  }
+});
+
+/* mute */
+$('#muteBtn').addEventListener('click', () => {
+  initAudio();
+  muted = !muted;
+  master.gain.value = muted ? 0 : .9;
+  $('#muteBtn').textContent = muted ? '🔇' : '🔊';
+});
+
+/* start */
+$('#startBtn').addEventListener('click', () => {
+  initAudio(); sfxClick();
+  $('#intro').classList.add('hidden');
+  $('#game').classList.add('show');
+  loadChapter(0);
+});
+
+/* intro cat art */
+(function introArt() {
+  const s = $('#introCat');
+  const g = grp({ transform: 'translate(70 140)' });
+  g.append(poseSit(PALS.cream));
+  const g2 = grp({ transform: 'translate(150 140) scale(-0.8 0.8)' });
+  g2.append(poseSit(PALS.orange));
+  s.append(g2, g);
+  // make them look happy
+  s.querySelectorAll('.eyesOpen').forEach(n => n.style.display = 'none');
+  s.querySelectorAll('.eyesHappy').forEach(n => n.style.display = 'block');
+  s.querySelectorAll('.blush').forEach(n => n.style.opacity = 1);
+})();
+</script>
+</body>
+</html>

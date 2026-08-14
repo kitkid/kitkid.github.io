@@ -1,0 +1,15 @@
+---
+layout: default
+---
+
+{% include site-nav.html %}
+<article class="page playground-page" lang="{{ page.lang | default: site.lang | default: 'zh-Hans' }}">
+  {% include header.html %}
+  {{ content }}
+  {% assign projects = site.playground | sort: "order" %}
+  <div class="playground-grid playground-grid-list">
+    {% for item in projects %}
+      {% include playground-card.html item=item %}
+    {% endfor %}
+  </div>
+</article>

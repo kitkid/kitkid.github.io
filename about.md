@@ -5,13 +5,22 @@ lang: zh-Hans
 navbar: true
 position: 100
 ---
-CV/Resume/Part of my life
-<br>Look forward to hearing from you =)
- <br>[CV.pdf](/assets/pdf/Huahui_CV.pdf)
+新一轮找工作
 
- ->点击[玩家经历](https://shimo.im/sheets/xtyqJdHt8dWYdRyt/MODOC/ 《玩家经历》，可复制链接后用石墨文档 App 或小程序打开)右转详情文档
+[简历请看](/assets/pdf/胡华慧_英国爱丁堡大学_应聘游戏策划2026.pdf)
 
- <!--cover_url: /assets/images/banners/home.jpeg
- cover_meta: >
-   Photo by [Amador Loureiro](https://unsplash.com/@amadorloureiroblanco)
-   -->
+[过往工作实例请看](/assets/pdf/Huahui_2024.pdf)
+
+---
+
+- [Game](/tags/game)
+- [Film](/tags/film)
+- [UXUI](/tags/ux)
+- [Random Stuff](/tags/play)
+
+好奇探索+100、疑似三分钟热度、但究极专注、总体长情的老年人
+
+日常散步、偶尔慢跑、不善冲刺
+
+最爱TWICE、dir Eric Rohmer、杭州/Toulouse
+

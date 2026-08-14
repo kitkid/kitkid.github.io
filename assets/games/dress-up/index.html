@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CLAWD.EXE — 更衣室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0B0C14;
+  --chassis:#23263A;
+  --chassis-hi:#363B57;
+  --chassis-lo:#12131F;
+  --screen:#0E1018;
+  --text:#E9E7F2;
+  --dim:#7B7FA3;
+  --amber:#FFB454;
+  --teal:#6BD6C4;
+  --pink:#FF7BA9;
+  --clay:#E8794A;
+  --glow:#FFB454;
+
+  --term:"VT323","PingFang SC","Hiragino Sans GB","Microsoft YaHei",monospace;
+  --cjk:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;padding:20px 14px 44px;min-height:100vh;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.16) 3px 4px),
+    radial-gradient(90% 60% at 50% 0%,#1A1D2E 0%,var(--void) 70%);
+  color:var(--text);font-family:var(--cjk);
+}
+
+/* ---------- title ---------- */
+.top{max-width:1080px;margin:0 auto 18px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.top h1{
+  font-family:var(--term);font-size:clamp(30px,6vw,48px);margin:0;line-height:.9;
+  letter-spacing:.06em;color:var(--amber);text-shadow:0 0 14px rgba(255,180,84,.45);
+}
+.top span{font-family:var(--term);font-size:19px;color:var(--dim);letter-spacing:.08em}
+
+.wrap{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.wrap{grid-template-columns:1fr}}
+
+/* ---------- SIGNATURE: CRT ---------- */
+.crt{
+  background:var(--chassis);padding:14px;
+  border:4px solid var(--chassis-lo);
+  box-shadow:inset -4px -4px 0 var(--chassis-lo),inset 4px 4px 0 var(--chassis-hi);
+}
+.screen{
+  position:relative;background:var(--screen);overflow:hidden;
+  border:4px solid #05060B;
+  box-shadow:inset 0 0 50px rgba(0,0,0,.9);
+}
+.screen::after{ /* scanlines */
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:5;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.34) 0 2px,transparent 2px 4px);
+}
+.halo{
+  position:absolute;left:50%;top:52%;width:130%;height:110%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,color-mix(in srgb,var(--glow) 22%,transparent) 0%,transparent 65%);
+  transition:background .5s steps(4,end);z-index:0;
+}
+#px{position:relative;z-index:2;display:block;width:100%;height:auto;image-rendering:pixelated;image-rendering:crisp-edges}
+.fx{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.bit{position:absolute;width:6px;height:6px;image-rendering:pixelated;animation:float .95s steps(6,end) forwards}
+@keyframes float{0%{transform:translateY(6px);opacity:0}20%{opacity:1}100%{transform:translateY(-64px);opacity:0}}
+
+/* mood motion — steps() keeps it 8-bit */
+.m-ecstatic #px{animation:hop .5s steps(2,end) infinite}
+.m-happy    #px{animation:bob .8s steps(2,end) infinite}
+.m-content  #px{animation:tilt 1.6s steps(2,end) infinite}
+.m-neutral  #px{animation:idle 2.6s steps(2,end) infinite}
+.m-awkward  #px{animation:jitter .16s steps(2,end) infinite}
+.m-protest  #px{animation:rage .3s steps(2,end) infinite}
+@keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-7%)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3%)}}
+@keyframes tilt{0%,100%{transform:translateX(-1%)}50%{transform:translateX(1%)}}
+@keyframes idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-1%)}}
+@keyframes jitter{0%{transform:translateX(-1%)}100%{transform:translateX(1%)}}
+@keyframes rage{0%,100%{transform:translate(-2%,0)}50%{transform:translate(2%,-4%)}}
+
+/* status LED on chassis */
+.chin{display:flex;align-items:center;gap:9px;padding-top:11px;font-family:var(--term);font-size:19px;color:var(--dim);letter-spacing:.08em}
+.led{width:10px;height:10px;background:var(--glow);box-shadow:0 0 10px var(--glow);transition:background .4s steps(3,end)}
+.chin b{color:var(--text);font-weight:400}
+
+/* ---------- terminal readout ---------- */
+.term{
+  margin-top:16px;background:#0B0D15;border:3px solid #1B1E2E;padding:13px 14px;
+  font-family:var(--term);font-size:22px;line-height:1.35;min-height:86px;color:var(--teal);
+}
+.term .tag{color:var(--dim)}
+.term .say{color:var(--text);font-family:var(--cjk);font-size:15px;line-height:1.6;display:block;margin-top:5px}
+.cur{display:inline-block;width:9px;height:17px;background:var(--teal);vertical-align:-2px;animation:blink 1s steps(2,end) infinite}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+.meters{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.meter{flex:1 1 150px;background:#0B0D15;border:3px solid #1B1E2E;padding:9px 11px}
+.meter .k{font-family:var(--term);font-size:17px;color:var(--dim);letter-spacing:.1em}
+.meter .v{font-size:15px;font-weight:600;margin:2px 0 7px}
+.blocks{display:flex;gap:3px}
+.blocks i{flex:1;height:9px;background:#1B1E2E;transition:background .25s steps(2,end)}
+
+.ops{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.op{
+  flex:1 1 auto;font-family:var(--term);font-size:21px;letter-spacing:.06em;cursor:pointer;
+  background:var(--chassis);color:var(--text);border:3px solid var(--chassis-lo);
+  box-shadow:inset -3px -3px 0 var(--chassis-lo),inset 3px 3px 0 var(--chassis-hi);
+  padding:9px 12px;
+}
+.op:active{box-shadow:inset 3px 3px 0 var(--chassis-lo);transform:translate(1px,1px)}
+.op.go{background:var(--amber);color:#2A1B06;border-color:#8A5C1E;box-shadow:inset -3px -3px 0 #8A5C1E,inset 3px 3px 0 #FFD9A0}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+
+/* ---------- wardrobe ---------- */
+.closet{background:var(--chassis);border:4px solid var(--chassis-lo);box-shadow:inset -4px -4px 0 var(--chassis-lo),inset 4px 4px 0 var(--chassis-hi);padding:14px}
+.tabs{display:flex;gap:5px;margin-bottom:13px}
+.tabs button{
+  flex:1;font-family:var(--term);font-size:20px;cursor:pointer;padding:8px 2px;
+  background:#171A28;color:var(--dim);border:3px solid #0F111B;
+}
+.tabs button[aria-selected="true"]{background:var(--amber);color:#2A1B06;border-color:#8A5C1E}
+
+.rack{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.slotbtn{
+  cursor:pointer;background:#12141F;border:3px solid #0C0E16;padding:6px 4px 7px;
+  display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text);
+}
+.slotbtn:hover{background:#1A1D2C}
+.slotbtn[aria-pressed="true"]{border-color:var(--amber);background:#221D14}
+.slotbtn canvas{width:100%;max-width:62px;height:auto;image-rendering:pixelated}
+.slotbtn .empty{font-family:var(--term);font-size:26px;color:#3B3F58;height:46px;display:grid;place-items:center}
+.slotbtn .nm{font-size:12px}
+.tg{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;min-height:13px}
+.tg span{font-family:var(--term);font-size:14px;line-height:1;padding:1px 4px;background:#242840;color:var(--dim)}
+.tg .luv{background:#3D2E12;color:var(--amber)}
+.tg .nah{background:#1E2740;color:#6E86C4}
+
+.note{margin-top:13px;padding-top:11px;border-top:3px solid #1A1D2C;font-size:12px;color:var(--dim);line-height:1.9}
+.note b{color:var(--text)}
+.note span{font-family:var(--term);font-size:14px;padding:1px 5px;background:#242840}
+.note .luv{background:#3D2E12;color:var(--amber)}
+.note .nah{background:#1E2740;color:#6E86C4}
+
+/* ---------- snapshot ---------- */
+.modal{position:fixed;inset:0;background:rgba(6,7,12,.88);display:none;place-items:center;padding:20px;z-index:60}
+.modal.on{display:grid}
+.card{background:var(--chassis);border:4px solid var(--chassis-lo);box-shadow:inset -4px -4px 0 var(--chassis-lo),inset 4px 4px 0 var(--chassis-hi);padding:14px;width:min(320px,92vw)}
+.card img{display:block;width:100%;image-rendering:pixelated;background:#0E1018;border:3px solid #05060B}
+.card h3{font-family:var(--term);font-size:30px;margin:12px 0 2px;color:var(--amber);letter-spacing:.05em}
+.card p{font-family:var(--term);font-size:18px;margin:0;color:var(--dim);letter-spacing:.05em}
+.card .op{width:100%;margin-top:12px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition-duration:.01ms !important}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>CLAWD.EXE</h1>
+  <span>// 更衣室 v2 · 像素还原版</span>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <div class="crt">
+      <div class="screen" id="screen">
+        <div class="halo"></div>
+        <canvas id="px" width="40" height="36" role="img" aria-label="Clawd 当前的穿搭"></canvas>
+        <div class="fx" id="fx"></div>
+      </div>
+      <div class="chin"><i class="led" id="led"></i> MOOD: <b id="moodTxt">NEUTRAL</b></div>
+    </div>
+
+    <div class="term">
+      <span class="tag">clawd@terminal ~ %</span>
+      <span class="say" id="say">今天穿点什么好呢……</span><span class="cur"></span>
+    </div>
+
+    <div class="meters">
+      <div class="meter">
+        <div class="k">好感度</div>
+        <div class="v" id="moodName">平静</div>
+        <div class="blocks" id="moodBlocks"></div>
+      </div>
+      <div class="meter">
+        <div class="k">造型称号</div>
+        <div class="v" id="lookName">素颜的一天</div>
+        <div class="blocks" id="lookBlocks"></div>
+      </div>
+    </div>
+
+    <div class="ops">
+      <button class="op" id="btnRand">随机</button>
+      <button class="op" id="btnStrip">全脱</button>
+      <button class="op go" id="btnShot">拍照</button>
+    </div>
+  </section>
+
+  <section class="closet">
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="rack" id="rack" role="tabpanel"></div>
+    <div class="note">
+      <b>Clawd 的口味</b><br>
+      最爱 <span class="luv">舒适</span> <span class="luv">奇怪</span> ·
+      喜欢 <span>可爱</span> <span>酷</span> <span>文艺</span> ·
+      别扭 <span class="nah">华丽</span> <span class="nah">正式</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="modal" id="modal">
+  <div class="card">
+    <img id="shotImg" alt="Clawd 的穿搭快照">
+    <h3 id="shotTitle"></h3>
+    <p id="shotSub"></p>
+    <div class="ops">
+      <button class="op go" id="btnSave">保存图片</button>
+      <button class="op" id="btnClose">关掉</button>
+    </div>
+    <p id="saveHint" style="margin-top:9px;font-family:var(--cjk);font-size:11px;color:var(--dim);line-height:1.6">
+      也可以直接长按 / 右键上面的图片另存。</p>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   40 x 36 像素画布。Clawd = 橙色 8-bit 方块团，只有两颗黑眼睛。
+   ============================================================ */
+const W = 40, H = 36;
+const cv = document.getElementById('px');
+const ctx = cv.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+const $ = id => document.getElementById(id);
+
+/* ---------- 口味 ---------- */
+const TAG  = {cozy:'舒适', weird:'奇怪', cute:'可爱', cool:'酷', arty:'文艺', fancy:'华丽', formal:'正式'};
+const LIKE = {cozy:3, weird:3, cute:2, cool:1, arty:1, fancy:-1, formal:-2};
+
+/* ---------- 身体几何 ---------- */
+const BODY = [];
+[[7,16,23],[8,16,23],[9,14,25],[10,14,25],[11,12,27],[12,12,27]].forEach(s=>BODY.push(s));
+for(let y=13; y<=26; y++) BODY.push([y,10,29]);
+BODY.push([27,12,27],[28,12,27]);
+const FEET  = [[29,13,17],[30,13,17],[29,22,26],[30,22,26]];
+const CLAWS = [[17,7,9],[18,6,9],[19,6,9],[20,6,9],[21,7,9],
+               [17,30,32],[18,30,33],[19,30,33],[20,30,33],[21,30,32]];
+
+/* 身体配色随心情微调 */
+const SKIN = {
+  ecstatic:{O:'#FF8F55',D:'#D96C3C',L:'#FFC495'},
+  happy   :{O:'#F0834F',D:'#CC6238',L:'#FFB183'},
+  content :{O:'#E8794A',D:'#C25E36',L:'#F5A275'},
+  neutral :{O:'#E8794A',D:'#C25E36',L:'#F5A275'},
+  awkward :{O:'#D4764F',D:'#AE5C39',L:'#E29A78'},
+  protest :{O:'#BB6D55',D:'#96543E',L:'#CE8C74'}
+};
+
+/* ---------- 眼睛（唯一的表情器官）---------- */
+const EYES = {
+  ecstatic:{L:['.X.','XXX','.X.'], R:['.X.','XXX','.X.'], c:'#FFD166'},
+  happy   :{L:['.X.','X.X','...'], R:['.X.','X.X','...'], c:'#151321'},
+  content :{L:['.XX','.XX','...'], R:['XX.','XX.','...'], c:'#151321'},
+  neutral :{L:['.XX','.XX','.XX'], R:['XX.','XX.','XX.'], c:'#151321'},
+  awkward :{L:['XXX','...','.X.'], R:['XXX','...','.X.'], c:'#151321'},
+  protest :{L:['X..','.XX','.XX'], R:['..X','XX.','XX.'], c:'#151321'}
+};
+
+/* ---------- 心情表 ---------- */
+const MOODS = [
+  {id:'ecstatic',min: 8,name:'狂喜',en:'ECSTATIC',glow:'#FFD166',
+   idle:['这套我要穿一整年！','我现在是最好的版本！','转圈！！！']},
+  {id:'happy',   min: 5,name:'开心',en:'HAPPY',glow:'#FFB454',
+   idle:['嘿嘿。挺好的。','我喜欢这个，真的。']},
+  {id:'content', min: 2,name:'满意',en:'CONTENT',glow:'#E09A5A',
+   idle:['嗯，可以。','不错，我接受。']},
+  {id:'neutral', min: 0,name:'平静',en:'NEUTRAL',glow:'#6BD6C4',
+   idle:['……然后呢？','就这样？我还能再穿点。']},
+  {id:'awkward', min:-4,name:'别扭',en:'AWKWARD',glow:'#5F86C4',
+   idle:['这个……有点紧。','我不太确定这是我。']},
+  {id:'protest', min:-99,name:'抗议',en:'PROTEST',glow:'#4A5EA8',
+   idle:['脱掉。现在。','我要罢工了。','这不是我签的合同。']}
+];
+
+/* ============================================================
+   衣橱：每件都是像素图 + 自己的调色板
+   ============================================================ */
+const SLOTS = [{k:'hat',n:'头顶'},{k:'face',n:'脸上'},{k:'outfit',n:'身上'},{k:'hand',n:'手里'}];
+
+const ITEMS = {
+
+hat:[
+ {id:'none',name:'不戴',tags:[],line:'脑袋空空，风穿过去很舒服。'},
+
+ {id:'beret',name:'贝雷帽',tags:['arty'],x:15,y:3,
+  line:'戴上就想说点关于光影的看法。',
+  pal:{s:'#2E7C74',S:'#1C5A54'},
+  art:['....ss.....',
+       '..sssssss..',
+       '.sssssssss.',
+       '.sssssssss.',
+       'SSSSSSSSSSS']},
+
+ {id:'shark',name:'鲨鱼头套',tags:['weird','cute'],x:11,y:0,
+  line:'嗷呜！！我是深海最强的生物！！',
+  pal:{g:'#8296AB',f:'#68809A',w:'#FBF7EF'},
+  art:['........ff........',
+       '.......ffff.......',
+       '......ffffff......',
+       '.....gggggggg.....',
+       '...gggggggggggg...',
+       '..gggggggggggggg..',
+       '.gggggggggggggggg.',
+       'gggggggggggggggggg',
+       'gggggggggggggggggg',
+       'gggggggggggggggggg',
+       'gggggggggggggggggg',
+       'wwwwwwwwwwwwwwwwww',
+       '.w.w.w.w.w.w.w.w.w']},
+
+ {id:'crown',name:'小皇冠',tags:['fancy'],x:15,y:3,
+  line:'呃……这个会不会有点太隆重了。',
+  pal:{c:'#F0C24B',C:'#C4952B',j:'#FF7BA9'},
+  art:['..c..c..c..',
+       '..c.ccc.c..',
+       '.ccccccccc.',
+       '.ccccjcccc.',
+       '.CCCCCCCCC.']},
+
+ {id:'nightcap',name:'睡帽',tags:['cozy'],x:14,y:0,
+  line:'完美。现在没有人能叫我起床。',
+  pal:{n:'#7C6BAE',p:'#F3EDE2',b:'#EFE7DA'},
+  art:['............pp..',
+       '...........pppp.',
+       '.........nnnpp..',
+       '.......nnnnnn...',
+       '.....nnnnnnn....',
+       '...nnnnnnnnn....',
+       '..nnnnnnnnnn....',
+       'bbbbbbbbbbbb....']},
+
+ {id:'phones',name:'大耳机',tags:['cool','cozy'],x:7,y:5,
+  line:'……啊？你说什么？我在听歌。',
+  pal:{k:'#242636',a:'#FFB454'},
+  art:['.........kkkkkkkk.........',
+       '.......kk........kk.......',
+       '.....kk............kk.....',
+       '....kk..............kk....',
+       '...kk................kk...',
+       '..kk..................kk..',
+       '.kk....................kk.',
+       'kkk....................kkk',
+       'kkk....................kkk',
+       'kka....................akk',
+       'kka....................akk',
+       'kkk....................kkk']}
+],
+
+face:[
+ {id:'none',name:'素脸',tags:[],line:'脸是我最自然的部分。'},
+
+ {id:'round',name:'圆框眼镜',tags:['arty'],x:10,y:12,
+  line:'现在我看起来很有想法了吧。',
+  pal:{m:'#4A3A2E'},
+  art:['...mmmmm....mmmmm...',
+       'mmmm...m....m...mmmm',
+       '...m...mmmmmm...m...',
+       '...m...m....m...m...',
+       '...mmmmm....mmmmm...']},
+
+ {id:'shades',name:'墨镜',tags:['cool'],x:10,y:12,
+  line:'别看我。……好吧其实可以看。',
+  pal:{m:'#191922',s:'#26262E',h:'#FFFFFF'},
+  art:['mmmmmmmmmmmmmmmmmmmm',
+       '..hssssss..hssssss..',
+       '..sssssss..sssssss..',
+       '...sssss....sssss...']},
+
+ {id:'blush',name:'腮红贴纸',tags:['cute'],x:10,y:15,
+  line:'嘿嘿。是不是变得更好看了。',
+  pal:{r:'#FF8FA8',t:'#FFD166'},
+  art:['.....t........t.....',
+       '.rrr............rrr.',
+       '.rrr............rrr.']},
+
+ {id:'monocle',name:'单片眼镜',tags:['formal','fancy'],x:21,y:11,
+  line:'我感觉自己要开始说敬语了，不太好。',
+  pal:{g:'#F0C24B'},
+  art:['.ggggg......',
+       'g.....g.....',
+       'g.....g.....',
+       'g.....g.....',
+       'g.....g.....',
+       '.ggggg......',
+       '.....g......',
+       '......g.....',
+       '.....g......']}
+],
+
+outfit:[
+ {id:'none',name:'不穿',tags:[],line:'我本来就是这个颜色，这算穿了吧？'},
+
+ {id:'sweater',name:'毛衣',tags:['cozy'],x:10,y:18,
+  line:'啊——就是这个。毛衣是我的家。',
+  pal:{y:'#E0A94E',c:'#F7E7C4',Y:'#B0813A'},
+  art:['yyyyyyyy....yyyyyyyy',
+       'yyyyyyyyy..yyyyyyyyy',
+       'yyyyyyyyyyyyyyyyyyyy',
+       'cccccccccccccccccccc',
+       'yyyyyyyyyyyyyyyyyyyy',
+       'yyyyyyyyyyyyyyyyyyyy',
+       'cccccccccccccccccccc',
+       'yyyyyyyyyyyyyyyyyyyy',
+       'YYYYYYYYYYYYYYYYYYYY']},
+
+ {id:'leather',name:'皮夹克',tags:['cool'],x:10,y:18,
+  line:'……我现在是不是很危险。有一点吧。',
+  pal:{j:'#2E2E38',J:'#1C1C24',z:'#C6C6D2'},
+  art:['jjjjjjj......jjjjjjj',
+       'jjjjjjjj....jjjjjjjj',
+       'jjjjjjjjj..jjjjjjjjj',
+       'jjjjjjjjjzzjjjjjjjjj',
+       'jjjjjjjjjzzjjjjjjjjj',
+       'jjjjjjjjjzzjjjjjjjjj',
+       'jjjjjjjjjzzjjjjjjjjj',
+       'jjjjjjjjjzzjjjjjjjjj',
+       'JJJJJJJJJzzJJJJJJJJJ']},
+
+ {id:'tutu',name:'泡泡裙',tags:['cute','fancy'],x:6,y:21,
+  line:'转一圈！再转一圈！',
+  pal:{p:'#FFA8C8',P:'#E87FA8'},
+  art:['.........pppppppppp.........',
+       '.......pppppppppppppp.......',
+       '.....pppppppppppppppppp.....',
+       '...pppppppppppppppppppppp...',
+       '.PPPPPPPPPPPPPPPPPPPPPPPPPP.',
+       'PPPPPPPPPPPPPPPPPPPPPPPPPPPP',
+       '.PP..PP..PP..PP..PP..PP..PP.']},
+
+ {id:'suit',name:'小西装',tags:['formal'],x:10,y:18,
+  line:'谁把我塞进这个里面的。我要开会吗。',
+  pal:{n:'#2C3550',N:'#1C2340',h:'#F5F1E8',t:'#9E3B3B'},
+  art:['nnnnnnn.hhhh.nnnnnnn',
+       'nnnnnnnn.tt.nnnnnnnn',
+       'nnnnnnnnhttthnnnnnnn',
+       'nnnnnnnnhttthnnnnnnn',
+       'nnnnnnnnhttthnnnnnnn',
+       'nnnnnnnnh.t.hnnnnnnn',
+       'nnnnnnnnnnnnnnnnnnnn',
+       'nnnnnnnnnnnnnnnnnnnn',
+       'NNNNNNNNNNNNNNNNNNNN']},
+
+ {id:'raincoat',name:'黄雨衣',tags:['weird','cozy'],x:8,y:17,
+  line:'今天没下雨。但我准备好了。',
+  pal:{l:'#F0C24B',L:'#C4952B',b:'#A67F22'},
+  art:['...llllllllllllllllll...',
+       '..llllllllllllllllllll..',
+       '.llllllllllllllllllllll.',
+       '.llllllllllbbllllllllll.',
+       '.llllllllllllllllllllll.',
+       '.llllllllllllllllllllll.',
+       '.llllllllllbbllllllllll.',
+       '.llllllllllllllllllllll.',
+       '.llllllllllllllllllllll.',
+       '.llllllllllbbllllllllll.',
+       'LLLLLLLLLLLLLLLLLLLLLLLL']}
+],
+
+hand:[
+ {id:'none',name:'空手',tags:[],line:'空手才好，随时能抱住东西。'},
+
+ {id:'coffee',name:'热咖啡',tags:['cozy'],x:32,y:16,
+  line:'烫烫的。人生已经圆满了。',
+  pal:{c:'#F5EFE4',C:'#CFC3AE',u:'#C1785A',v:'#7E88A8'},
+  art:['..vv...',
+       '.v..v..',
+       '..vv...',
+       'uuuuuu.',
+       '.cccc..',
+       '.ccccu.',
+       '.ccccu.',
+       '.CCCC..']},
+
+ {id:'umbrella',name:'小雨伞',tags:['weird'],x:30,y:8,
+  line:'室内撑伞。我知道。我就是要这样。',
+  pal:{u:'#6BD6C4',h:'#8A5A3B'},
+  art:['....uu....',
+       '..uuuuuu..',
+       '.uuuuuuuu.',
+       'uuuuuuuuuu',
+       'u.uu.uu.uu',
+       '....h.....',
+       '....h.....',
+       '....h.....',
+       '....h.....',
+       '....h.....',
+       '...hh.....',
+       '..hh......']},
+
+ {id:'guitar',name:'电吉他',tags:['cool'],x:30,y:12,
+  line:'我只会一个和弦。但那个和弦很响。',
+  pal:{h:'#8A5A3B',g:'#C4384A',k:'#1E1E28'},
+  art:['........hh',
+       '.......hh.',
+       '......hh..',
+       '.....hh...',
+       '....hh....',
+       '...hh.....',
+       '..gggg....',
+       '.gggggg...',
+       '.ggkkgg...',
+       '.gggggg...',
+       '..gggg....']},
+
+ {id:'flower',name:'一朵小花',tags:['cute','cozy'],x:32,y:14,
+  line:'给你的。……不行，还是我自己拿着吧。',
+  pal:{f:'#FF9EC4',o:'#FFD166',s:'#5FA36A'},
+  art:['..fff..',
+       '.fffff.',
+       '.ffoff.',
+       '.fffff.',
+       '..fff..',
+       '...s...',
+       '...s...',
+       '.sss...',
+       '...s...',
+       '...s...']},
+
+ {id:'case',name:'公文包',tags:['formal'],x:31,y:17,
+  line:'里面装的是零食。但看起来很专业。',
+  pal:{b:'#7A5436',B:'#54381F',g:'#F0C24B',h:'#54381F'},
+  art:['..hhhh..',
+       '..h..h..',
+       'bbbbbbbb',
+       'bbbbbbbb',
+       'bbbggbbb',
+       'bbbbbbbb',
+       'bbbbbbbb',
+       'BBBBBBBB']}
+]
+};
+
+/* ---------- 套装联动 ---------- */
+const COMBOS = [
+  {n:'深夜酒保', b:4, t:e=>e.hat==='nightcap'&&e.hand==='coffee', l:'打烊了。但我可以再给你倒一杯。'},
+  {n:'深海怪谈', b:5, t:e=>e.hat==='shark'&&e.outfit==='raincoat', l:'我从海里来。带了一点湿气。别介意。'},
+  {n:'毛毯结界', b:4, t:e=>e.outfit==='sweater'&&e.hat==='phones'&&e.hand==='coffee', l:'谁都别想把我从这个状态里弄出来。'},
+  {n:'地下摇滚', b:3, t:e=>e.outfit==='leather'&&e.face==='shades'&&e.hand==='guitar', l:'下一首歌叫《我不想营业》。'},
+  {n:'被迫上班', b:-5,t:e=>e.outfit==='suit'&&e.hand==='case', l:'我不去。你不能让我去。我不去。'},
+  {n:'小小公主', b:3, t:e=>e.outfit==='tutu'&&e.hat==='crown', l:'今天由我统治这个房间。规则是：都要午睡。'},
+  {n:'雨天散步', b:3, t:e=>e.outfit==='raincoat'&&e.hand==='umbrella', l:'双重防护。我现在完全防水。'},
+  {n:'文艺现场', b:3, t:e=>e.hat==='beret'&&e.face==='round', l:'我要开始点评这个房间的构图了。'}
+];
+
+/* ============================================================
+   绘制
+   ============================================================ */
+function paint(c, art, ox, oy, pal){
+  for(let ry=0; ry<art.length; ry++){
+    const row = art[ry];
+    for(let rx=0; rx<row.length; rx++){
+      const col = pal[row[rx]];
+      if(!col) continue;
+      c.fillStyle = col;
+      c.fillRect(ox+rx, oy+ry, 1, 1);
+    }
+  }
+}
+function span(c, color, list){
+  c.fillStyle = color;
+  list.forEach(([y,a,b])=> c.fillRect(a, y, b-a+1, 1));
+}
+
+function drawBody(c, m){
+  const s = SKIN[m];
+  span(c, s.O, BODY);
+  // 右侧两列做暗部
+  c.fillStyle = s.D;
+  BODY.forEach(([y,,b])=> c.fillRect(b-1, y, 2, 1));
+  span(c, s.D, [[27,12,27],[28,12,27]]);
+  span(c, s.D, FEET);
+  span(c, s.D, CLAWS);
+  // 左上高光
+  c.fillStyle = s.L;
+  c.fillRect(16, 10, 2, 2);
+  c.fillRect(13, 14, 2, 2);
+}
+
+function drawEyes(c, m){
+  const e = EYES[m];
+  const pal = {X:e.c};
+  paint(c, e.L, 14, 13, pal);
+  paint(c, e.R, 23, 13, pal);
+
+  // 附加情绪符号
+  if(m==='ecstatic'||m==='happy'||m==='content'){
+    c.fillStyle = '#F5896B';
+    c.fillRect(11,16,3,1); c.fillRect(26,16,3,1);
+  }
+  if(m==='ecstatic'){
+    paint(c, ['.h.h.','hhhhh','.hhh.','..h..'], 3, 6, {h:'#FF7BA9'});
+    paint(c, ['.h.h.','hhhhh','.hhh.','..h..'], 33, 4, {h:'#FF7BA9'});
+  }
+  if(m==='awkward') paint(c, ['.v.','vvv','.v.'], 31, 7, {v:'#7FD3E8'});
+  if(m==='protest') paint(c, ['a.a','.a.','a.a'], 30, 4, {a:'#FF5A5A'});
+}
+
+function render(spoken){
+  const {s, tags, combo} = score();
+  const m = MOODS.find(x=>s>=x.min) || MOODS[MOODS.length-1];
+  mood = m;
+
+  ctx.clearRect(0,0,W,H);
+  // 地面阴影
+  ctx.fillStyle = 'rgba(0,0,0,.35)';
+  ctx.fillRect(12, 32, 16, 1);
+  ctx.fillRect(14, 33, 12, 1);
+
+  drawBody(ctx, m.id);
+  const it = k => ITEMS[k].find(i=>i.id===worn[k]);
+  const lay = i => { if(i.art) paint(ctx, i.art, i.x, i.y, i.pal); };
+
+  lay(it('outfit'));
+  drawEyes(ctx, m.id);
+  lay(it('face'));
+  lay(it('hat'));
+  lay(it('hand'));
+
+  // 舞台
+  $('screen').className = 'screen m-' + m.id;
+  document.documentElement.style.setProperty('--glow', m.glow);
+  $('led').style.background = m.glow;
+  $('led').style.boxShadow = '0 0 10px ' + m.glow;
+  $('moodTxt').textContent = m.en;
+  $('moodName').textContent = m.name;
+
+  bar('moodBlocks', Math.round(Math.max(0,Math.min(10, 5 + s*0.62))), m.glow, 10);
+  const wornCt = SLOTS.filter(x=>worn[x.k]!=='none').length;
+  $('lookName').textContent = title(tags, combo);
+  bar('lookBlocks', combo ? 4 : wornCt, combo ? '#FF7BA9' : '#6BD6C4', 4);
+
+  $('say').textContent = spoken || (combo ? combo.l : m.idle[(Math.random()*m.idle.length)|0]);
+  buildRack();
+}
+
+function bar(id, n, color, total){
+  const el = $(id);
+  if(el.children.length !== total) el.innerHTML = '<i></i>'.repeat(total);
+  [...el.children].forEach((b,i)=> b.style.background = i < n ? color : '#1B1E2E');
+}
+
+/* ---------- 计分 ---------- */
+const worn = {hat:'none', face:'none', outfit:'none', hand:'none'};
+let mood = MOODS[3], tab = 'hat';
+
+function score(){
+  let s=0, tags={};
+  SLOTS.forEach(({k})=>{
+    const it = ITEMS[k].find(i=>i.id===worn[k]);
+    (it.tags||[]).forEach(t=>{ s += LIKE[t]; tags[t] = (tags[t]||0)+1; });
+  });
+  const combo = COMBOS.find(c=>c.t(worn));
+  if(combo) s += combo.b;
+  return {s, tags, combo};
+}
+function title(tags, combo){
+  if(combo) return combo.n;
+  if(SLOTS.every(x=>worn[x.k]==='none')) return '素颜的一天';
+  const top = Object.entries(tags).sort((a,b)=>b[1]-a[1])[0];
+  if(!top) return '朴素主义';
+  return ({cozy:'一整团舒服',weird:'不明生物',cute:'可爱过头',cool:'装酷中',
+           arty:'文艺现场',fancy:'闪闪发光',formal:'假装成年人'})[top[0]];
+}
+
+/* ---------- 衣柜 UI ---------- */
+function buildTabs(){
+  $('tabs').innerHTML = SLOTS.map(s=>
+    `<button role="tab" data-k="${s.k}" aria-selected="${s.k===tab}">${s.n}</button>`).join('');
+}
+function buildRack(){
+  $('rack').innerHTML = ITEMS[tab].map(i=>{
+    const on = worn[tab]===i.id;
+    const tg = (i.tags||[]).map(t=>{
+      const c = LIKE[t]>=3?'luv':(LIKE[t]<0?'nah':'');
+      return `<span class="${c}">${TAG[t]}</span>`;
+    }).join('');
+    const art = i.art ? `<canvas data-thumb="${i.id}"></canvas>` : `<div class="empty">—</div>`;
+    return `<button class="slotbtn" data-id="${i.id}" aria-pressed="${on}">
+      ${art}<span class="nm">${i.name}</span><span class="tg">${tg}</span></button>`;
+  }).join('');
+
+  // 缩略图：只画这件衣服本身
+  ITEMS[tab].forEach(i=>{
+    if(!i.art) return;
+    const c = $('rack').querySelector(`canvas[data-thumb="${i.id}"]`);
+    const w = Math.max(...i.art.map(r=>r.length)), h = i.art.length;
+    const sz = Math.max(w, h) + 2;
+    c.width = sz; c.height = sz;
+    const cc = c.getContext('2d');
+    cc.imageSmoothingEnabled = false;
+    paint(cc, i.art, ((sz-w)/2)|0, ((sz-h)/2)|0, i.pal);
+  });
+}
+
+function burst(kind){
+  const box = $('fx');
+  for(let i=0;i<10;i++){
+    const b = document.createElement('i');
+    b.className = 'bit';
+    b.style.left = (18 + Math.random()*60) + '%';
+    b.style.top  = (40 + Math.random()*32) + '%';
+    b.style.background = kind === 'bad' ? '#4A5EA8' : (Math.random()>.5 ? '#FFD166' : '#FF7BA9');
+    b.style.animationDelay = (Math.random()*.3) + 's';
+    box.appendChild(b);
+    setTimeout(()=>b.remove(), 1400);
+  }
+}
+
+/* ---------- 交互 ---------- */
+$('tabs').onclick = e=>{
+  const b = e.target.closest('button[data-k]'); if(!b) return;
+  tab = b.dataset.k; buildTabs(); buildRack();
+};
+$('rack').onclick = e=>{
+  const b = e.target.closest('.slotbtn'); if(!b) return;
+  worn[tab] = b.dataset.id;
+  const it = ITEMS[tab].find(i=>i.id===b.dataset.id);
+  render(it.line);
+  const s = score().s;
+  if(s >= 5) burst('good'); else if(s <= -4) burst('bad');
+};
+$('btnRand').onclick = ()=>{
+  SLOTS.forEach(({k})=>{ const p = ITEMS[k]; worn[k] = p[(Math.random()*p.length)|0].id; });
+  render();
+  const s = score().s;
+  if(s >= 5) burst('good'); else if(s <= -4) burst('bad');
+};
+$('btnStrip').onclick = ()=>{
+  SLOTS.forEach(({k})=> worn[k]='none');
+  render('全脱了。我又是一个纯粹的方块。');
+};
+let shotCanvas = null, shotName = 'clawd.png';
+
+function buildShot(){
+  const {s, tags, combo} = score();
+  const head = title(tags, combo);
+  const names = SLOTS.map(x=>ITEMS[x.k].find(i=>i.id===worn[x.k])).filter(i=>i.id!=='none').map(i=>i.name);
+  const sub = `${mood.name} ${s>=0?'+':''}${s} / ${names.length?names.join(' · '):'一丝不挂'}`;
+
+  const S = 6, PAD = 8, PW = W*S, PH = H*S;
+  const out = document.createElement('canvas');
+  out.width = PW + PAD*2;
+  out.height = PH + PAD*2 + 76;
+  const oc = out.getContext('2d');
+  oc.imageSmoothingEnabled = false;
+
+  oc.fillStyle = '#23263A'; oc.fillRect(0,0,out.width,out.height);
+  oc.fillStyle = '#0E1018'; oc.fillRect(PAD,PAD,PW,PH);
+  oc.drawImage(cv, PAD, PAD, PW, PH);
+  oc.fillStyle = 'rgba(0,0,0,.26)';
+  for(let y=0; y<PH; y+=4) oc.fillRect(PAD, PAD+y, PW, 2);
+
+  const cjk = '"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif';
+  oc.textBaseline = 'alphabetic';
+  oc.fillStyle = '#FFB454';
+  oc.font = '700 26px ' + cjk;
+  oc.fillText(head, PAD, PH + PAD + 34);
+
+  oc.fillStyle = '#7B7FA3';
+  let fs = 14;
+  oc.font = fs + 'px ' + cjk;
+  while(oc.measureText(sub).width > PW && fs > 9){ fs--; oc.font = fs + 'px ' + cjk; }
+  oc.fillText(sub, PAD, PH + PAD + 60);
+
+  shotCanvas = out;
+  shotName = `clawd-${head}.png`;
+  $('shotImg').src = out.toDataURL('image/png');
+  $('shotTitle').textContent = head;
+  $('shotSub').textContent = sub;
+}
+
+$('btnShot').onclick = ()=>{ buildShot(); $('modal').classList.add('on'); };
+
+$('btnSave').onclick = async ()=>{
+  if(!shotCanvas) return;
+  const hint = $('saveHint');
+  const blob = await new Promise(r => shotCanvas.toBlob(r, 'image/png'));
+  if(!blob){ hint.textContent = '导出失败，请长按 / 右键图片另存。'; return; }
+
+  // 手机优先走系统分享面板 → “存储到照片”
+  try{
+    const file = new File([blob], shotName, {type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file]});
+      return;
+    }
+  }catch(err){ if(err && err.name === 'AbortError') return; }
+
+  // 桌面走下载
+  try{
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = shotName;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    hint.textContent = '已导出。若没反应，请长按 / 右键图片另存。';
+  }catch(err){
+    hint.textContent = '当前页面禁止下载，请长按 / 右键图片另存。';
+  }
+};
+$('btnClose').onclick = ()=> $('modal').classList.remove('on');
+$('modal').onclick = e=>{ if(e.target.id==='modal') $('modal').classList.remove('on'); };
+document.onkeydown = e=>{ if(e.key==='Escape') $('modal').classList.remove('on'); };
+
+/* ---------- boot ---------- */
+buildTabs();
+render('今天穿点什么好呢……');
+</script>
+</body>
+</html>
